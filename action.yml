@@ -1,0 +1,69 @@
+name: "Dynamic Application Security Testing (DAST) with Nuclei"
+description: "Nuclei is an open-source web application security scanner developed by ProjectDiscovery.io."
+branding:
+  icon: "alert-circle"
+  color: "purple"
+
+inputs:
+  urls-txt:
+    description: "List of urls to run templates"
+    required: true
+    default: ".github/nuclei.txt"
+  custom-templates:
+    description: "Custom templates to check on urls"
+    required: false
+    default: ".github/custom-templates/"
+  user-agent:
+    description: "Set User-Agent header"
+    required: false
+    default: "Nuclei - Open-source project (github.com/projectdiscovery/nuclei)"
+  slack-token:
+    description: "Authentication token bearing required scopes"
+    required: false
+    default: ""
+  slack-channel:
+    description: "Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name"
+    required: false
+    default: ""
+  dd-api-key:
+    description: "An API key is required by the Datadog Agent to submit metrics and events to Datadog"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        git clone https://github.com/projectdiscovery/nuclei.git
+        cd nuclei/cmd/nuclei/
+        go build
+      shell: bash
+
+    - run: |
+        $GITHUB_WORKSPACE/nuclei/cmd/nuclei/nuclei -l $GITHUB_WORKSPACE/${{ inputs.urls-txt }} \
+          -json \
+          -silent \
+          -update-directory . \
+          -update-templates \
+          -t nuclei-templates/ \
+          -t $GITHUB_WORKSPACE/${{ inputs.custom-templates }} \
+          -H "User-Agent:${{ inputs.user-agent }}" \
+          -o $GITHUB_WORKSPACE/output.txt
+      shell: bash
+
+    - run: |
+        git clone https://github.com/secopslab/appsec-etl.git
+        pip3 install setuptools --upgrade 1>/dev/null
+
+        if [ ${{ inputs.slack-token }} ]
+        then
+          pip3 install slackclient 1>/dev/null
+          cat $GITHUB_WORKSPACE/output.txt | python3 appsec-etl/transform/nuclei/toslack.py | python3 appsec-etl/load/toslack.py ${{ inputs.slack-token }} ${{ inputs.slack-channel }}
+        fi
+
+        if [ ${{ inputs.dd-api-key }} ]
+        then
+          pip3 install requests 1>/dev/null
+          cat $GITHUB_WORKSPACE/output.txt | python3 appsec-etl/transform/nuclei/todatadog.py | python3 appsec-etl/load/todatadog.py ${{ inputs.dd-api-key }}
+        fi
+      shell: bash
