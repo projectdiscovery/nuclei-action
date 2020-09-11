@@ -27,12 +27,21 @@ jobs:
         with:
           urls-txt: ".github/nuclei.txt"
           custom-templates: ".github/custom-templates/"
-          user-agent: "Explore https://github.com/secopslab/"
+          user-agent: "Nuclei - Open-source project (github.com/projectdiscovery/nuclei)"
 
       - uses: actions/upload-artifact@v2
         with:
           name: nuclei.log
           path: nuclei.log
+
+      - uses: secopslab/appsec-etl@v1
+        with:
+          tool: nuclei
+          slack-token: ${{ secrets.SLACK_TOKEN }}
+          slack-channel: ${{ secrets.SLACK_CHANNEL_NUCLEI }}
+          datadog-token: ${{ secrets.DD_API_KEY }}
+          telegram-token: ${{ secrets.TELEGRAM_TOKEN }}
+          telegram-channel: ${{secrets.TELEGRAM_CHANNEL }}
 ```
 
 ## Arguments
