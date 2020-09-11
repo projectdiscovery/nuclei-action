@@ -14,7 +14,7 @@ inputs:
     required: false
     default: "custom-templates/"
   user-agent:
-    description: "Set User-Agent header"
+    description: "Set a User-Agent header"
     required: false
     default: "Nuclei - Open-source project (github.com/projectdiscovery/nuclei)"
 
