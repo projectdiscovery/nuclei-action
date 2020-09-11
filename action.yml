@@ -41,9 +41,9 @@ runs:
     - id: setup
       run: |
         git clone https://github.com/projectdiscovery/nuclei.git
-        cd nuclei/cmd/nuclei/
+        cd 
         go build
-        mv nuclei /usr/local/bin/
+        ::add-path::${{ github.workspace }}/nuclei/cmd/nuclei/
       shell: bash
 
     - id: scan
