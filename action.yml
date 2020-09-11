@@ -33,7 +33,7 @@ inputs:
 outputs:
   logfile:
     description: "Output filepath"
-    value: ${{ steps.scan.outputs.logfile }}
+    value: ${{ steps.scan.outputs.output-txt }}
 
 runs:
   using: "composite"
@@ -58,7 +58,7 @@ runs:
           -t ${{ github.workspace }}/${{ inputs.custom-templates }} \
           -H "User-Agent:${{ inputs.user-agent }}" \
           -o ${{ github.workspace }}/output.txt
-          echo "::set-output name=logfile::${{ github.workspace }}/output.txt"
+          echo "::set-output name=output-txt::${{ github.workspace }}/output.txt"
       shell: bash
 
     - run: |
