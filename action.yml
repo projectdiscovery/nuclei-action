@@ -43,7 +43,7 @@ runs:
         git clone https://github.com/projectdiscovery/nuclei.git
         cd 
         go build
-        ::add-path::"${{ github.workspace }}/nuclei/cmd/nuclei/"
+        mv nuclei /home/runner/nuclei
       shell: bash
 
     - id: scan
