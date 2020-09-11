@@ -30,25 +30,34 @@ inputs:
     required: false
     default: ""
 
+outputs:
+  logfile:
+    description: "Output filepath"
+    value: ${{ steps.scan.outputs.logfile }}
+
 runs:
   using: "composite"
   steps:
-    - run: |
+    - id: setup
+      run: |
         git clone https://github.com/projectdiscovery/nuclei.git
         cd nuclei/cmd/nuclei/
         go build
+        mv nuclei /usr/local/bin/
       shell: bash
 
-    - run: |
-        $GITHUB_WORKSPACE/nuclei/cmd/nuclei/nuclei -l $GITHUB_WORKSPACE/${{ inputs.urls-txt }} \
+    - id: scan
+      run: |
+        nuclei -l ${{ github.workspace }}/${{ inputs.urls-txt }} \
           -json \
           -silent \
           -update-directory . \
           -update-templates \
           -t nuclei-templates/ \
-          -t $GITHUB_WORKSPACE/${{ inputs.custom-templates }} \
+          -t ${{ github.workspace }}/${{ inputs.custom-templates }} \
           -H "User-Agent:${{ inputs.user-agent }}" \
-          -o $GITHUB_WORKSPACE/output.txt
+          -o ${{ github.workspace }}/output.txt
+          echo "::set-output name=logfile::${{ github.workspace }}/output.txt"
       shell: bash
 
     - run: |
@@ -58,12 +67,12 @@ runs:
         if [ ${{ inputs.slack-token }} ]
         then
           pip3 install slackclient 1>/dev/null
-          cat $GITHUB_WORKSPACE/output.txt | python3 appsec-etl/transform/nuclei/toslack.py | python3 appsec-etl/load/toslack.py ${{ inputs.slack-token }} ${{ inputs.slack-channel }}
+          cat ${{ github.workspace }}/output.txt | python3 appsec-etl/transform/nuclei/toslack.py | python3 appsec-etl/load/toslack.py ${{ inputs.slack-token }} ${{ inputs.slack-channel }}
         fi
 
         if [ ${{ inputs.dd-api-key }} ]
         then
           pip3 install requests 1>/dev/null
-          cat $GITHUB_WORKSPACE/output.txt | python3 appsec-etl/transform/nuclei/todatadog.py | python3 appsec-etl/load/todatadog.py ${{ inputs.dd-api-key }}
+          cat ${{ github.workspace }}/output.txt | python3 appsec-etl/transform/nuclei/todatadog.py | python3 appsec-etl/load/todatadog.py ${{ inputs.dd-api-key }}
         fi
       shell: bash
