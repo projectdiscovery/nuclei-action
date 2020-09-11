@@ -8,11 +8,11 @@ inputs:
   urls-txt:
     description: "List of urls to run templates"
     required: true
-    default: ".github/nuclei.txt"
+    default: "nuclei.txt"
   custom-templates:
     description: "Custom templates to check on urls"
     required: false
-    default: ".github/custom-templates/"
+    default: "custom-templates/"
   user-agent:
     description: "Set User-Agent header"
     required: false
@@ -33,23 +33,21 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - id: setup
-      run: |
+    - run: |
         git clone https://github.com/projectdiscovery/nuclei.git
         cd nuclei/cmd/nuclei/
         go build
         echo "::add-path::${{ github.workspace }}/nuclei/cmd/nuclei/"
       shell: bash
 
-    - id: scan
-      run: |
-        nuclei -l ${{ github.workspace }}/${{ inputs.urls-txt }} \
+    - run: |
+        nuclei -l ${{ inputs.urls-txt }} \
           -json \
           -silent \
-          -update-directory . \
+          -update-directory ${{ github.workspace }} \
           -update-templates \
           -t nuclei-templates/ \
-          -t ${{ github.workspace }}/${{ inputs.custom-templates }} \
+          -t ${{ inputs.custom-templates }} \
           -H "User-Agent:${{ inputs.user-agent }}" \
-          -o ${{ github.workspace }}/output.txt
+          -o nuclei.log
       shell: bash
