@@ -30,11 +30,6 @@ inputs:
     required: false
     default: ""
 
-outputs:
-  logfile:
-    description: "Output filepath"
-    value: ${{ steps.scan.outputs.output-txt }}
-
 runs:
   using: "composite"
   steps:
@@ -57,22 +52,4 @@ runs:
           -t ${{ github.workspace }}/${{ inputs.custom-templates }} \
           -H "User-Agent:${{ inputs.user-agent }}" \
           -o ${{ github.workspace }}/output.txt
-          echo "::set-output name=output-txt::${{ github.workspace }}/output.txt"
-      shell: bash
-
-    - run: |
-        git clone https://github.com/secopslab/appsec-etl.git
-        pip3 install setuptools --upgrade 1>/dev/null
-
-        if [ ${{ inputs.slack-token }} ]
-        then
-          pip3 install slackclient 1>/dev/null
-          cat ${{ github.workspace }}/output.txt | python3 appsec-etl/transform/nuclei/toslack.py | python3 appsec-etl/load/toslack.py ${{ inputs.slack-token }} ${{ inputs.slack-channel }}
-        fi
-
-        if [ ${{ inputs.dd-api-key }} ]
-        then
-          pip3 install requests 1>/dev/null
-          cat ${{ github.workspace }}/output.txt | python3 appsec-etl/transform/nuclei/todatadog.py | python3 appsec-etl/load/todatadog.py ${{ inputs.dd-api-key }}
-        fi
       shell: bash
