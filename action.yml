@@ -17,18 +17,6 @@ inputs:
     description: "Set User-Agent header"
     required: false
     default: "Nuclei - Open-source project (github.com/projectdiscovery/nuclei)"
-  slack-token:
-    description: "Authentication token bearing required scopes"
-    required: false
-    default: ""
-  slack-channel:
-    description: "Channel, private group, or IM channel to send message to. Can be an encoded ID, or a name"
-    required: false
-    default: ""
-  dd-api-key:
-    description: "An API key is required by the Datadog Agent to submit metrics and events to Datadog"
-    required: false
-    default: ""
 
 runs:
   using: "composite"
@@ -44,7 +32,7 @@ runs:
         nuclei -l ${{ inputs.urls-txt }} \
           -json \
           -silent \
-          -update-directory ${{ github.workspace }} \
+          -update-directory . \
           -update-templates \
           -t nuclei-templates/ \
           -t ${{ inputs.custom-templates }} \
