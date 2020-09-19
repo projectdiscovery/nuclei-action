@@ -39,7 +39,7 @@ jobs:
           tool: nuclei
           slack-token: ${{ secrets.SLACK_TOKEN }}
           slack-channel: ${{ secrets.SLACK_CHANNEL_NUCLEI }}
-          datadog-token: ${{ secrets.DD_API_KEY }}
+          datadog-token: ${{ secrets.DATADOG_TOKEN }}
           telegram-token: ${{ secrets.TELEGRAM_TOKEN }}
           telegram-channel: ${{secrets.TELEGRAM_CHANNEL }}
 ```
