@@ -23,7 +23,7 @@ runs:
   steps:
     - run: |
         git clone https://github.com/projectdiscovery/nuclei.git
-        cd nuclei/cmd/nuclei/
+        cd nuclei/v2/cmd/nuclei
         go build
         echo "::add-path::${{ github.workspace }}/nuclei/cmd/nuclei/"
       shell: bash
