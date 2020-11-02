@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: secopslab/nuclei-action@v1
+      - uses: secopslab/nuclei-action@main
         with:
           urls-txt: ".github/nuclei.txt"
           custom-templates: ".github/custom-templates/"
@@ -34,7 +34,7 @@ jobs:
           name: nuclei.log
           path: nuclei.log
 
-      - uses: secopslab/appsec-etl@v1
+      - uses: secopslab/appsec-etl@main
         with:
           tool: nuclei
           slack-token: ${{ secrets.SLACK_TOKEN }}
