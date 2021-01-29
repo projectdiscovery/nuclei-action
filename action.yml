@@ -1,5 +1,5 @@
-name: "Dynamic Application Security Testing (DAST) with Nuclei"
-description: "Nuclei is an open-source web application security scanner developed by ProjectDiscovery.io."
+name: "Nuclei Action"
+description: "Nuclei is a fast tool for configurable targeted scanning based on templates offering massive extensibility and ease of use."
 branding:
   icon: "alert-circle"
   color: "purple"
@@ -8,7 +8,7 @@ inputs:
   urls-txt:
     description: "List of urls to run templates"
     required: true
-    default: "nuclei.txt"
+    default: "urls.txt"
   custom-templates:
     description: "Custom templates to check on urls"
     required: false
@@ -23,17 +23,17 @@ runs:
   steps:
     - run: |
         git clone https://github.com/projectdiscovery/nuclei.git
-        cd nuclei/v2/cmd/nuclei
+        cd nuclei/v2/cmd/nuclei/
         go build
         echo "${{ github.workspace }}/nuclei/v2/cmd/nuclei" >> $GITHUB_PATH
+        nuclei -version
+        nuclei -update-templates
       shell: bash
 
     - run: |
         nuclei -l ${{ inputs.urls-txt }} \
           -json \
           -silent \
-          -update-directory . \
-          -update-templates \
           -t nuclei-templates/ \
           -t ${{ inputs.custom-templates }} \
           -H "User-Agent:${{ inputs.user-agent }}" \
