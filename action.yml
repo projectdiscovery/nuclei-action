@@ -44,5 +44,5 @@ runs:
           -include-rr \
           -update-templates \
           -update-directory ./ \
-          -H "User-Agent: ${{ inputs.user-agent }}" \
+          -H "User-Agent: ${{ inputs.user-agent }}"
       shell: bash
