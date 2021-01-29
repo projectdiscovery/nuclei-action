@@ -8,6 +8,7 @@ inputs:
   urls:
     description: "List of urls to run templates"
     required: true
+    default: "urls.txt"
 
   templates:
     description: "Templates input file/files to check across hosts"
