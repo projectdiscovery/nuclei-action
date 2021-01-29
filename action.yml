@@ -26,6 +26,8 @@ runs:
         cd nuclei/v2/cmd/nuclei/
         go build
         echo "${{ github.workspace }}/nuclei/v2/cmd/nuclei/" >> $GITHUB_PATH
+        echo "${{ github.workspace }}"
+        echo $GITHUB_PATH
         pwd
         ls -la
         nuclei -version
