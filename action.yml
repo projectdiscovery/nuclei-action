@@ -25,17 +25,12 @@ runs:
         git clone https://github.com/projectdiscovery/nuclei.git
         cd nuclei/v2/cmd/nuclei/
         go build
-        echo "---"
-        echo ${{ github.workspace }}"/nuclei/v2/cmd/nuclei/" >> $GITHUB_PATH
-        echo "${{ github.workspace }}"
-        echo $GITHUB_PATH
-        pwd
-        ls -la
-        nuclei -version
-        nuclei -update-templates
+        echo "${{ github.workspace }}/nuclei/v2/cmd/nuclei" >> $GITHUB_PATH
       shell: bash
 
     - run: |
+        nuclei -version
+        nuclei -update-templates
         nuclei -l ${{ inputs.urls-txt }} \
           -t nuclei-templates/ \
           -t ${{ inputs.custom-templates }} \
