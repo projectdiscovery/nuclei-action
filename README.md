@@ -17,7 +17,7 @@ on:
 
 jobs:
   worker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:      
       - uses: actions/checkout@v2      
 
@@ -28,8 +28,8 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: nuclei.log
-          path: nuclei.log
+          name: output.txt
+          path: output.txt
 ```
 
 Inputs
