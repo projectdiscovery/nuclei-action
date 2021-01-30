@@ -28,8 +28,8 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: output.txt
-          path: output.txt
+          name: nuclei.log
+          path: nuclei.log
 ```
 
 Inputs
