@@ -1,18 +1,19 @@
-name: "Dynamic Application Security Testing (DAST) with Nuclei"
-description: "Nuclei is an open-source web application security scanner developed by ProjectDiscovery.io."
-branding:
-  icon: "alert-circle"
-  color: "purple"
+name: "Nuclei Action"
+description: "Vulnerability scanning with Nuclei"
 
 inputs:
-  urls-txt:
+  urls:
     description: "List of urls to run templates"
     required: true
-    default: "nuclei.txt"
-  custom-templates:
-    description: "Custom templates to check on urls"
+    default: "urls.txt"
+  templates:
+    description: "Templates input file/files to check across hosts"
     required: false
-    default: "custom-templates/"
+    default: "nuclei-templates"
+  output:
+    description: "File to save output result"
+    required: false
+    default: "output.txt"
   user-agent:
     description: "Set a User-Agent header"
     required: false
@@ -23,19 +24,19 @@ runs:
   steps:
     - run: |
         git clone https://github.com/projectdiscovery/nuclei.git
-        cd nuclei/v2/cmd/nuclei
+        cd nuclei/v2/cmd/nuclei/
         go build
         echo "${{ github.workspace }}/nuclei/v2/cmd/nuclei" >> $GITHUB_PATH
       shell: bash
 
     - run: |
-        nuclei -l ${{ inputs.urls-txt }} \
+        nuclei \
+          -l ${{ inputs.urls }} \
+          -t ${{ inputs.templates }} \
+          -o ${{ inputs.output }} \
           -json \
-          -silent \
-          -update-directory . \
+          -include-rr \
           -update-templates \
-          -t nuclei-templates/ \
-          -t ${{ inputs.custom-templates }} \
-          -H "User-Agent:${{ inputs.user-agent }}" \
-          -o nuclei.log
+          -update-directory ./ \
+          -H "User-Agent: ${{ inputs.user-agent }}"
       shell: bash
