@@ -14,6 +14,10 @@ inputs:
     description: "File to save output result"
     required: false
     default: "output.txt"
+  nuclei-ignore:
+    description: "define templates that will be blocked from execution"
+    required: false
+    default: ".nuclei-ignore"
   user-agent:
     description: "Set a User-Agent header"
     required: false
@@ -23,20 +27,24 @@ runs:
   using: "composite"
   steps:
     - run: |
-        git clone https://github.com/projectdiscovery/nuclei.git
-        cd nuclei/v2/cmd/nuclei/
-        go build
-        echo "${{ github.workspace }}/nuclei/v2/cmd/nuclei" >> $GITHUB_PATH
+        GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+        echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
 
     - run: |
         nuclei \
+          -update-templates \
+          -update-directory ./ \
+          \
+
+        test -e ${{ inputs.nuclei-ignore }} && cp ${{ inputs.nuclei-ignore }} nuclei-templates/.nuclei-ignore
+
+        nuclei \
           -l ${{ inputs.urls }} \
           -t ${{ inputs.templates }} \
           -o ${{ inputs.output }} \
+          -H "User-Agent: ${{ inputs.user-agent }}"
           -json \
           -include-rr \
-          -update-templates \
-          -update-directory ./ \
-          -H "User-Agent: ${{ inputs.user-agent }}"
+          \
       shell: bash
