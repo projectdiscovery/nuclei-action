@@ -3,8 +3,7 @@
   <br>
 </h1>
 
-[Nuclei](https://github.com/projectdiscovery/nuclei) is a fast tool for configurable targeted scanning based on templates offering massive extensibility and ease of use.  
-Nuclei Action is GitHub Actions to easily orchestrate Nuclei to your application security workflow.
+[Nuclei Action](https://github.com/projectdiscovery/nuclei-action) is a GitHub Action to integrate [Nuclei](https://github.com/projectdiscovery/nuclei) scanning to a workflow.
 
 Usage
 -----
