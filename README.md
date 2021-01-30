@@ -3,7 +3,7 @@
   <br>
 </h1>
 
-[Nuclei Action](https://github.com/projectdiscovery/nuclei-action) is a [GitHub Action](https://github.com/features/actions) to create application security workflows with [Nuclei](https://github.com/projectdiscovery/nuclei).
+[Nuclei Action](https://github.com/projectdiscovery/nuclei-action) is a [GitHub Action](https://github.com/features/actions) to help you create application security workflows with [Nuclei](https://github.com/projectdiscovery/nuclei) vulnerability scanner.
 
 Usage
 -----
