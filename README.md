@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 10 * * *"
-    
+
 jobs:
   worker:
     runs-on: ubuntu-20.04
