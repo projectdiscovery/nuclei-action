@@ -43,7 +43,7 @@ runs:
           -l ${{ inputs.urls }} \
           -t ${{ inputs.templates }} \
           -o ${{ inputs.output }} \
-          -H "User-Agent: ${{ inputs.user-agent }}"
+          -H "User-Agent: ${{ inputs.user-agent }}" \
           -json \
           -include-rr \
           \
