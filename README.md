@@ -17,19 +17,19 @@ on:
 
 jobs:
   worker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:      
       - uses: actions/checkout@v2      
 
       - uses: projectdiscovery/nuclei-action@main
         with:
           urls: "urls.txt"
-          output: "output.txt"
+          output: "nuclei.log"
 
       - uses: actions/upload-artifact@v2
         with:
-          name: output.txt
-          path: output.txt
+          name: nuclei.log
+          path: nuclei.log
 ```
 
 Inputs
