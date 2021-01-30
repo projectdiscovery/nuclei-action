@@ -9,17 +9,14 @@ inputs:
     description: "List of urls to run templates"
     required: true
     default: "urls.txt"
-
   templates:
     description: "Templates input file/files to check across hosts"
     required: false
     default: "./nuclei-templates/"
-
   output:
     description: "File to save output result"
     required: false
     default: "output.txt"
-
   user-agent:
     description: "Set a User-Agent header"
     required: false

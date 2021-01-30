@@ -3,15 +3,14 @@
   <br>
 </h1>
 
-[Nuclei](https://github.com/projectdiscovery/nuclei) is an open-source web application security scanner developed by [ProjectDiscovery.io](https://twitter.com/pdiscoveryio). Its template engine empowers a community of cybersecurity researchers to keep up the exploit database.
+[Nuclei](https://github.com/projectdiscovery/nuclei) is a fast tool for configurable targeted scanning based on templates offering massive extensibility and ease of use.  
+Nuclei Action is GitHub Actions to easily orchestrate Nuclei to your application security workflow.
 
-## Usage
+Usage
+-----
 
-[.github/workflows/nuclei.yml](https://github.com/secopslab/appsec-actions/blob/master/.github/workflows/nuclei.yml)
-
+*.github/workflows/nuclei.yml*
 ```
-name: "DAST with Nuclei"
-
 on:
   workflow_dispatch:
   schedule:
@@ -20,42 +19,26 @@ on:
 jobs:
   worker:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+    steps:      
+      - uses: actions/checkout@v2      
 
-      - uses: secopslab/nuclei-action@main
+      - uses: projectdiscovery/nuclei-action@main
         with:
-          urls-txt: ".github/nuclei.txt"
-          custom-templates: ".github/custom-templates/"
-          user-agent: "Nuclei - Open-source project (github.com/projectdiscovery/nuclei)"
+          urls: "urls.txt"
+          output: "output.txt"
 
       - uses: actions/upload-artifact@v2
         with:
-          name: nuclei.log
-          path: nuclei.log
-
-      - uses: secopslab/appsec-etl@main
-        with:
-          tool: nuclei
-          slack-token: ${{ secrets.SLACK_TOKEN }}
-          slack-channel: ${{ secrets.SLACK_CHANNEL_NUCLEI }}
-          datadog-token: ${{ secrets.DATADOG_TOKEN }}
-          telegram-token: ${{ secrets.TELEGRAM_TOKEN }}
-          telegram-channel: ${{secrets.TELEGRAM_CHANNEL }}
+          name: output.txt
+          path: output.txt
 ```
 
-## Arguments
+Inputs
+------
 
-| Input  | Description | Usage |
+| Key  | Description | Required |
 | :---:     |     :---:   |    :---:   |
-| `urls-txt`  | List of urls to run templates  | Required
-| `custom-templates`  | Custom templates to check on urls  | Optional
-| `user-agent`  | Set a User-Agent header | Optional
-
-## Contributing
-
-Contributions are welcome!
-
-## License
-
-The code in this project is released under the [MIT License](LICENSE).
+| `urls`  | List of urls to run templates | true
+| `templates`  | Templates input file/files to check across hosts | false
+| `output`  | File to save output result | false
+| `user-agent`  | Set a User-Agent header | false
