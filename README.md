@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "0 10 * * *"
-
+    
 jobs:
   worker:
     runs-on: ubuntu-20.04
@@ -37,7 +37,8 @@ Inputs
 
 | Key  | Description | Required |
 | :---:     |     :---:   |    :---:   |
-| `urls`  | List of urls to run templates | true
-| `templates`  | Templates input file/files to check across hosts | false
-| `output`  | File to save output result | false
-| `user-agent`  | Set a User-Agent header | false
+| `urls` | List of urls to run templates | true
+| `templates` | Templates input file/files to check across hosts | false
+| `output` | File to save output result | false
+| `nuclei-ignore` | Define templates that will be blocked from execution | false
+| `user-agent` | Set a User-Agent header | false
