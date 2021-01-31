@@ -1,5 +1,5 @@
 name: "Nuclei Action"
-description: "Vulnerability scanning with Nuclei"
+description: "Nuclei is a fast and customisable vulnerability scanner based on simple YAML based DSL"
 
 inputs:
   urls:
@@ -13,7 +13,7 @@ inputs:
   output:
     description: "File to save output result"
     required: false
-    default: "output.txt"
+    default: "nuclei.log"
   nuclei-ignore:
     description: "define templates that will be blocked from execution"
     required: false
@@ -37,7 +37,7 @@ runs:
           -update-directory ./ \
           \
 
-        test -e ${{ inputs.nuclei-ignore }} && cp ${{ inputs.nuclei-ignore }} nuclei-templates/.nuclei-ignore
+        test -e ${{ inputs.nuclei-ignore }} && cp ${{ inputs.nuclei-ignore }} ${{ inputs.templates }}/.nuclei-ignore
 
         nuclei \
           -l ${{ inputs.urls }} \
