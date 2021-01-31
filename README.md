@@ -4,7 +4,9 @@
 </h1>
 
 [Nuclei Action](https://github.com/projectdiscovery/nuclei-action) makes it easy to orchestrate [Nuclei](https://github.com/projectdiscovery/nuclei) with [GitHub Action](https://github.com/features/actions).
-Integrate all of your Nuclei templates into powerful continuous security workflows and make it part of your secure software development life cycle.
+Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuclei-templates) into powerful continuous security workflows and make it part of your secure software development life cycle.
+
+
 
 Usage
 -----
