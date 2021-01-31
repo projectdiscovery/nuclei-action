@@ -21,10 +21,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+
       - uses: projectdiscovery/nuclei-action@main
         with:
           urls: "urls.txt"
           output: "nuclei.log"
+
       - uses: actions/upload-artifact@v2
         with:
           name: nuclei.log
