@@ -24,9 +24,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: /home/runner/go/bin/nuclei
+          key: ${{ runner.os }}-${{ hashFiles('/home/runner/go/bin/nuclei') }}
+
       - uses: projectdiscovery/nuclei-action@main
         with:
           urls: "urls.txt"
+          templates: "nuclei-templates"
           output: "nuclei.log"
 
       - uses: actions/upload-artifact@v2
