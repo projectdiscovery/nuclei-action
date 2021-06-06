@@ -1,4 +1,4 @@
-<h1 align="left">
+<h1 align="center">
   <img src="https://github.com/projectdiscovery/nuclei/blob/master/static/nuclei-logo.png" alt="nuclei" width="200px"></a>
   <br>
 </h1>
@@ -13,6 +13,8 @@ Usage
 
 *.github/workflows/nuclei.yml* 
 ```
+name: Nuclei - DAST
+
 on:
   workflow_dispatch:
   schedule:
@@ -46,6 +48,8 @@ Example with nuclei generating an ISSUE with the report:
 
 *.github/workflows/nuclei.yml* 
 ```
+name: Nuclei - DAST
+
 on:
   workflow_dispatch:
   schedule:
@@ -73,13 +77,14 @@ jobs:
 Inputs
 ------
 
-| Key  | Description | Required |
-| :---:     |     :---:   |    :---:   |
-| `urls` | List of urls to run templates | true
-| `templates` | Templates input file/files to check across hosts | false
-| `output` | File to save output result | false
-| `include-rr` | Include request/response in log | false
-| `nuclei-ignore` | Define templates that will be blocked from execution | false
-| `user-agent` | Set a User-Agent header | false
-| `github-report` | Set `true` for generate an issue with the report | false
-| `report-token` | Set the Github Token | false
+|       Key       |                     Description                      | Required |
+| :-------------: | :--------------------------------------------------: | :------: |
+|     `urls`      |            List of urls to run templates             |   true   |
+|   `templates`   |   Templates input file/files to check across hosts   |  false   |
+|    `output`     |              File to save output result              |  false   |
+|  `include-rr`   |           Include request/response in log            |  false   |
+| `nuclei-ignore` | Define templates that will be blocked from execution |  false   |
+|  `user-agent`   |               Set a User-Agent header                |  false   |
+| `github-report` |   Set `true` for generate an issue with the report   |  false   |
+| `report-token`  |                 Set the Github Token                 |  false   |
+
