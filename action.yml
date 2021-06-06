@@ -8,18 +8,15 @@ inputs:
   urls:
     description: "List of urls to run templates"
     required: false
-    default: "urls.txt"
   templates:
     description: "Templates input file/files to check across hosts"
     required: false
   output:
     description: "File to save output result"
     required: false
-    default: "nuclei.log"
   json:
     description: "Write nuclei output in JSON format"
     required: false
-    default: false
   include-rr:
     description: "Write requests/responses for matches in JSON output"
     required: false
@@ -46,7 +43,7 @@ runs:
   using: "composite"
   steps:
     - run: |
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@sarif-integration
+        GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@sarif-integration
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
     - run: |
@@ -59,7 +56,6 @@ runs:
         ${{ inputs.output }} && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV
         ${{ inputs.sarif }} && echo "sarif=-sf ${{ inputs.sarif}}" >> $GITHUB_ENV
         ${{ inputs.templates }} && echo "templates=-t ./nuclei-templates/${{ inputs.templates }}" >> $GITHUB_ENV
-
         ${{ inputs.github-report }} \
         && touch ~/nuclei-github-config.yaml \
         && echo -e "github:" >> ~/nuclei-github-config.yaml \
