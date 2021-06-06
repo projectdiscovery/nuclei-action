@@ -46,15 +46,19 @@ runs:
   using: "composite"
   steps:
     - run: |
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
+        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@sarif-integration
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
     - run: |
-        [ ! -z ${{ inputs.config }} ] && cp ${{ inputs.config }} /.config/nuclei/config.yaml
-        [ ! -z "${{ inputs.user-agent }}" ] && echo 'useragent=-H "User-Agent: ${{ inputs.user-agent }}"' >> $GITHUB_ENV
+        ${{ inputs.config }}  && cp ${{ inputs.config }} /.config/nuclei/config.yaml
+        ${{ inputs.user-agent }} && echo 'useragent=-H "User-Agent: ${{ inputs.user-agent }}"' >> $GITHUB_ENV
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
         ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
-        ${{ inputs.target }} && echo "target=-target" >> $GITHUB_ENV
+        ${{ inputs.target }} && echo "target=-target ${{ inputs.target}}" >> $GITHUB_ENV
+        ${{ inputs.urls }} && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
+        ${{ inputs.output }} && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV
+        ${{ inputs.sarif }} && echo "sarif=-sf nuclei.sarif" >> $GITHUB_ENV
+        ${{ inputs.templates }} && echo "templates=-t ./nuclei-templates/${{ inputs.templates }}" >> $GITHUB_ENV
 
         ${{ inputs.github-report }} \
         && touch ~/nuclei-github-config.yaml \
@@ -66,19 +70,20 @@ runs:
         && echo -e "  issue-label: \"Nuclei Reporting\"" >> ~/nuclei-github-config.yaml \
         && echo "githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
         
-        nuclei \
+        nuclei -silent \
           -update-templates \
           -update-directory ./nuclei-templates
       shell: bash
     - run: |
         
         nuclei \
-          -l ${{ inputs.target }} \
-          -l ${{ inputs.urls }} \
-          -t ./nuclei-templates/${{ inputs.templates }} \
+          ${{ env.target }} \
+          ${{ env.urls }} \
+          ${{ env.templates }} \
           ${{ env.useragent }} \
-          -o ${{ inputs.output }} \
+          ${{ env.output }} \
           ${{ env.json }} \
           ${{ env.githubconfig }} \
+          ${{ env.sarif }} \
           ${{ env.includerr }}
       shell: bash
