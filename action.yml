@@ -23,7 +23,6 @@ inputs:
   include-rr:
     description: "Write requests/responses for matches in JSON output"
     required: false
-    default: false
   config:
     description: "Nuclei configuration file"
     required: false
@@ -33,11 +32,12 @@ inputs:
   github-report:
     description: "Active Nuclei Reporting Module for Github"
     required: false
-    default: false
   jira-report:
     description: "Active Nuclei Reporting Module for Jira"
     required: false
-    default: false
+  sarif-export:
+    description: "Write nuclei output in sarif format"
+    required: false
   github-token:
     description: "Github token for create issues"
     required: false
@@ -57,7 +57,7 @@ runs:
         ${{ inputs.target }} && echo "target=-target ${{ inputs.target}}" >> $GITHUB_ENV
         ${{ inputs.urls }} && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
         ${{ inputs.output }} && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV
-        ${{ inputs.sarif }} && echo "sarif=-sf nuclei.sarif" >> $GITHUB_ENV
+        ${{ inputs.sarif }} && echo "sarif=-sf ${{ inputs.sarif}}" >> $GITHUB_ENV
         ${{ inputs.templates }} && echo "templates=-t ./nuclei-templates/${{ inputs.templates }}" >> $GITHUB_ENV
 
         ${{ inputs.github-report }} \
