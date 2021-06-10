@@ -33,7 +33,7 @@ jobs:
           path: /home/runner/go/bin/nuclei
           key: ${{ runner.os }}-${{ hashFiles('/home/runner/go/bin/nuclei') }}
 
-      - uses: projectdiscovery/nuclei-action@main
+      - uses: projectdiscovery/nuclei-action@v1.0.0
         with:
           target: https://example.com
           output: "nuclei.log"
@@ -68,7 +68,7 @@ jobs:
           path: /home/runner/go/bin/nuclei
           key: ${{ runner.os }}-${{ hashFiles('/home/runner/go/bin/nuclei') }}
 
-      - uses: projectdiscovery/nuclei-action@main
+      - uses: projectdiscovery/nuclei-action@v1.0.0
         with:
           target: https://example.com
           github-report: true
