@@ -2,33 +2,38 @@ name: "Nuclei Action"
 description: "Nuclei is a fast and customisable vulnerability scanner based on simple YAML based DSL"
 
 inputs:
+  target:
+    description: "Target to run nuclei scan"
+    required: true
   urls:
     description: "List of urls to run templates"
-    required: true
-    default: "urls.txt"
+    required: false
   templates:
     description: "Templates input file/files to check across hosts"
     required: false
   output:
     description: "File to save output result"
     required: false
-    default: "nuclei.log"
+  json:
+    description: "Write nuclei output in JSON format"
+    required: false
+    default: false
   include-rr:
     description: "Write requests/responses for matches in JSON output"
     required: false
     default: false
-  nuclei-ignore:
-    description: "define templates that will be blocked from execution"
+  config:
+    description: "Nuclei configuration file"
     required: false
   user-agent:
-    description: "Set a User-Agent header"
+    description: "Set a Custom User-Agent header"
     required: false
   github-report:
-    description: "Active Nuclei Reporting Module for Github"
+    description: "Nuclei Reporting Module for Github"
     required: false
     default: false
-  report-token:
-    description: "Github token for create issues"
+  github-token:
+    description: "Github token for Github reporting"
     required: false
     
 runs:
@@ -39,32 +44,37 @@ runs:
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
     - run: |
-        [ ! -z ${{ inputs.nuclei-ignore }} ] && cp ${{ inputs.nuclei-ignore }} /nuclei-templates/.nuclei-ignore
-        [ ! -z "${{ inputs.user-agent }}" ] && echo 'useragent=-H "User-Agent: ${{ inputs.user-agent }}"' >> $GITHUB_ENV
+        [ ! -z ${{ inputs.target }} ] && echo "target=-target ${{ inputs.target}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.urls }} ] && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV || echo "templates=-t ./nuclei-templates" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV
+        ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
-        
+        [ ! -z ${{ inputs.config }} ] && cp ${{ inputs.config }} /.config/nuclei/config.yaml
+        [ ! -z "${{ inputs.user-agent }}" ] && echo 'useragent=-H "${{ inputs.user-agent }}"' >> $GITHUB_ENV
         ${{ inputs.github-report }} \
-        && touch ~/nuclei-report-config.yaml \
-        && echo -e "github:" >> ~/nuclei-report-config.yaml \
-        && echo -e "  username: \"$GITHUB_ACTOR\"" >> ~/nuclei-report-config.yaml \
-        && echo -e "  owner: \"${GITHUB_REPOSITORY%%/*}\"" >> ~/nuclei-report-config.yaml \
-        && echo -e "  token: \"${{ inputs.report-token }}\"" >> ~/nuclei-report-config.yaml \
-        && echo -e "  project-name: \"${GITHUB_REPOSITORY#*/}\"" >> ~/nuclei-report-config.yaml \
-        && echo -e "  issue-label: \"Nuclei Reporting\"" >> ~/nuclei-report-config.yaml \
-        && echo "reportconfig=-rc ~/nuclei-report-config.yaml" >> $GITHUB_ENV
+        && touch ~/nuclei-github-config.yaml \
+        && echo -e "github:" >> ~/nuclei-github-config.yaml \
+        && echo -e "  username: \"$GITHUB_ACTOR\"" >> ~/nuclei-github-config.yaml \
+        && echo -e "  owner: \"${GITHUB_REPOSITORY%%/*}\"" >> ~/nuclei-github-config.yaml \
+        && echo -e "  token: \"${{ inputs.github-token }}\"" >> ~/nuclei-github-config.yaml \
+        && echo -e "  project-name: \"${GITHUB_REPOSITORY#*/}\"" >> ~/nuclei-github-config.yaml \
+        && echo -e "  issue-label: \"Nuclei\"" >> ~/nuclei-github-config.yaml \
+        && echo "githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
         
-        nuclei \
+        nuclei -silent \
           -update-templates \
           -update-directory ./nuclei-templates
       shell: bash
     - run: |
         
         nuclei \
-          -l ${{ inputs.urls }} \
-          -t ./nuclei-templates/${{ inputs.templates }} \
+          ${{ env.target }} \
+          ${{ env.urls }} \
+          ${{ env.templates }} \
           ${{ env.useragent }} \
-          -o ${{ inputs.output }} \
-          -json \
-          ${{ env.reportconfig }} \
+          ${{ env.output }} \
+          ${{ env.json }} \
+          ${{ env.githubconfig }} \
           ${{ env.includerr }}
       shell: bash
