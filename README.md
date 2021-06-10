@@ -11,8 +11,9 @@ Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuc
 Usage
 -----
 
-*.github/workflows/nuclei.yml* 
-```
+*.github/workflows/nuclei.yml*
+
+```yaml
 name: Nuclei - DAST
 
 on:
@@ -34,8 +35,7 @@ jobs:
 
       - uses: projectdiscovery/nuclei-action@main
         with:
-          urls: "urls.txt"
-          templates: "nuclei-templates"
+          target: https://example.com
           output: "nuclei.log"
 
       - uses: actions/upload-artifact@v2
@@ -46,8 +46,9 @@ jobs:
 
 Example with nuclei generating an ISSUE with the report:
 
-*.github/workflows/nuclei.yml* 
-```
+*.github/workflows/nuclei.yml*
+
+```yaml
 name: Nuclei - DAST
 
 on:
@@ -69,7 +70,7 @@ jobs:
 
       - uses: projectdiscovery/nuclei-action@main
         with:
-          urls: "urls.txt"
+          target: https://example.com
           github-report: true
           report-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -77,14 +78,16 @@ jobs:
 Inputs
 ------
 
-|       Key       |                     Description                      | Required |
-| :-------------: | :--------------------------------------------------: | :------: |
-|     `urls`      |            List of urls to run templates             |   true   |
-|   `templates`   |   Templates input file/files to check across hosts   |  false   |
-|    `output`     |              File to save output result              |  false   |
-|  `include-rr`   |           Include request/response in log            |  false   |
-| `nuclei-ignore` | Define templates that will be blocked from execution |  false   |
-|  `user-agent`   |               Set a User-Agent header                |  false   |
-| `github-report` |   Set `true` for generate an issue with the report   |  false   |
-| `report-token`  |                 Set the Github Token                 |  false   |
+|       Key       |                   Description                    | Required |
+| :-------------: | :----------------------------------------------: | :------: |
+|    `target`     |           Target URL to run templates            |   true   |
+|     `urls`      |          List of urls to run templates           |  false   |
+|   `templates`   |      Custom templates to check across hosts      |  false   |
+|    `output`     |            File to save output result            |  false   |
+|  `include-rr`   |         Include request/response in log          |  false   |
+|    `config`     |        Custom config file to use for scan        |  false   |
+|  `user-agent`   |             Set a User-Agent header              |  false   |
+| `github-report` | Set `true` for generate an issue with the report |  false   |
+| `report-token`  |               Set the Github Token               |  false   |
+
 
