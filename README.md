@@ -8,35 +8,75 @@ Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuc
 
 
 
-Usage
+Example Usage
 -----
 
-*.github/workflows/nuclei.yml*
+**GitHub Action running nuclei on single URL**
+
+```yaml
+      - name: Nuclei Scan
+        uses: projectdiscovery/nuclei-action@v1.0.1
+        with:
+          target: https://example.com
+```
+
+**GitHub Action running nuclei with custom templates**
+
+```yaml
+      - name: Nuclei Scan
+        uses: projectdiscovery/nuclei-action@v1.0.1
+        with:
+          target: https://example.com
+          templates: custom_template_path
+```
+
+<ins>As default, all the default [nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) are used for scan.</ins>
+
+**GitHub Action running nuclei on multiple URLs**
+
+```yaml
+      - name: Nuclei Scan
+        uses: projectdiscovery/nuclei-action@v1.0.1
+        with:
+          urls: urls.txt
+```
+
+**GitHub Example Action running nuclei with GitHub Issue reporting**
+
+```yaml
+      - name: Nuclei Scan
+        uses: projectdiscovery/nuclei-action@v1.0.1
+        with:
+          target: https://example.com
+          github-report: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+
+Workflow - `.github/workflows/nuclei.yml`
+
 
 ```yaml
 name: Nuclei - DAST
 
 on:
+    schedule:
+      - cron: '0 0 * * *'
   workflow_dispatch:
-  schedule:
-    - cron: "0 10 * * *"
 
 jobs:
-  worker:
-    runs-on: ubuntu-20.04
+  nuclei-scan:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - uses: actions/cache@v2
-        id: cache
+      - uses: actions/setup-go@v2
         with:
-          path: /home/runner/go/bin/nuclei
-          key: ${{ runner.os }}-${{ hashFiles('/home/runner/go/bin/nuclei') }}
+          go-version: 1.15
 
-      - uses: projectdiscovery/nuclei-action@v1.0.0
+      - name: Nuclei Scan
+        uses: projectdiscovery/nuclei-action@v1.0.1
         with:
           target: https://example.com
-          output: "nuclei.log"
 
       - uses: actions/upload-artifact@v2
         with:
@@ -44,50 +84,18 @@ jobs:
           path: nuclei.log
 ```
 
-Example with nuclei generating an ISSUE with the report:
-
-*.github/workflows/nuclei.yml*
-
-```yaml
-name: Nuclei - DAST
-
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 10 * * *"
-
-jobs:
-  worker:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: actions/cache@v2
-        id: cache
-        with:
-          path: /home/runner/go/bin/nuclei
-          key: ${{ runner.os }}-${{ hashFiles('/home/runner/go/bin/nuclei') }}
-
-      - uses: projectdiscovery/nuclei-action@v1.0.0
-        with:
-          target: https://example.com
-          github-report: true
-          report-token: ${{ secrets.GITHUB_TOKEN }}
-```
-
-Inputs
+Available Inputs
 ------
 
-|       Key       |                   Description                    | Required |
-| :-------------: | :----------------------------------------------: | :------: |
-|    `target`     |           Target URL to run templates            |   true   |
-|     `urls`      |          List of urls to run templates           |  false   |
-|   `templates`   |      Custom templates to check across hosts      |  false   |
-|    `output`     |            File to save output result            |  false   |
-|  `include-rr`   |         Include request/response in log          |  false   |
-|    `config`     |        Custom config file to use for scan        |  false   |
-|  `user-agent`   |             Set a User-Agent header              |  false   |
-| `github-report` | Set `true` for generate an issue with the report |  false   |
-| `report-token`  |               Set the Github Token               |  false   |
-
-
+| Key             | Description                                         | Required |
+| --------------- | --------------------------------------------------- | -------- |
+| `target`        | Target URL to run nuclei scan                       | true     |
+| `urls`          | List of urls to run nuclei scan                     | false    |
+| `templates`     | Custom templates directory/file to run nuclei scan  | false    |
+| `output`        | File to save output result (default - nuclei.log)   | false    |
+| `json`          | Write results in JSON format                        | false    |
+| `include-rr`    | Include request/response in results                 | false    |
+| `config`        | Set custom nuclei config file to use                | false    |
+| `user-agent`    | Set custom user-agent header                        | false    |
+| `github-report` | Set `true` to generate Github issue with the report | false    |
+| `github-token`  | Set the Github Token                                | false    |
