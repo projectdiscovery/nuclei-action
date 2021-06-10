@@ -29,24 +29,18 @@ inputs:
     description: "Set a Custom User-Agent header"
     required: false
   github-report:
-    description: "Active Nuclei Reporting Module for Github"
+    description: "Nuclei Reporting Module for Github"
     required: false
     default: false
-  jira-report:
-    description: "Active Nuclei Reporting Module for Jira"
-    required: false
-  sarif-export:
-    description: "Write nuclei output in sarif format"
-    required: false
   github-token:
-    description: "Github token for create issues"
+    description: "Github token for Github reporting"
     required: false
     
 runs:
   using: "composite"
   steps:
     - run: |
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@sarif-integration
+        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
     - run: |
@@ -58,7 +52,6 @@ runs:
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
         [ ! -z ${{ inputs.config }} ] && cp ${{ inputs.config }} /.config/nuclei/config.yaml
         [ ! -z "${{ inputs.user-agent }}" ] && echo 'useragent=-H "${{ inputs.user-agent }}"' >> $GITHUB_ENV
-        [ ! -z ${{ inputs.sarif-export }} ] && echo "sarif=-sf ${{ inputs.sarif-export}}" >> $GITHUB_ENV
         ${{ inputs.github-report }} \
         && touch ~/nuclei-github-config.yaml \
         && echo -e "github:" >> ~/nuclei-github-config.yaml \
@@ -83,6 +76,5 @@ runs:
           ${{ env.output }} \
           ${{ env.json }} \
           ${{ env.githubconfig }} \
-          ${{ env.sarif }} \
           ${{ env.includerr }}
       shell: bash
