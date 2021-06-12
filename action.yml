@@ -8,37 +8,56 @@ inputs:
   target:
     description: "Target to run nuclei scan"
     required: true
+
   urls:
     description: "List of urls to run templates"
     required: false
+
   templates:
     description: "Templates input file/files to check across hosts"
     required: false
+
   output:
     description: "File to save output result"
     required: false
+
   json:
     description: "Write nuclei output in JSON format"
     required: false
     default: false
+
   include-rr:
     description: "Write requests/responses for matches in JSON output"
     required: false
     default: false
+
   config:
     description: "Nuclei configuration file"
     required: false
+
   user-agent:
     description: "Set a Custom User-Agent header"
     required: false
+
   github-report:
-    description: "Nuclei Reporting Module for Github"
+    description: "Nuclei Reporting Module for Github Issues"
     required: false
     default: false
+
   github-token:
     description: "Github token for Github reporting"
     required: false
-    
+
+  sarif-export:
+    description: "Export nuclei results in SARIF format"
+    required: false
+    default: false
+
+  markdown-export:
+    description: "Export nuclei results in Markdown format"
+    required: false
+    default: false
+
 runs:
   using: "composite"
   steps:
@@ -51,10 +70,12 @@ runs:
         [ ! -z ${{ inputs.urls }} ] && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV || echo "templates=-t ./nuclei-templates" >> $GITHUB_ENV
         [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
-        ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
-        ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
         [ ! -z ${{ inputs.config }} ] && cp ${{ inputs.config }} /.config/nuclei/config.yaml
         [ ! -z "${{ inputs.user-agent }}" ] && echo 'useragent=-H "${{ inputs.user-agent }}"' >> $GITHUB_ENV
+        ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
+        ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
+        ${{ inputs.sarif-export }} && echo "sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
+        ${{ inputs.markdown-export }} && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV || echo "markdown-export=-me reports" >> $GITHUB_ENV
         ${{ inputs.github-report }} \
         && touch ~/nuclei-github-config.yaml \
         && echo -e "github:" >> ~/nuclei-github-config.yaml \
@@ -77,6 +98,8 @@ runs:
           ${{ env.templates }} \
           ${{ env.useragent }} \
           ${{ env.output }} \
+          ${{ env.sarif-export }} \
+          ${{ env.markdown-export }} \
           ${{ env.json }} \
           ${{ env.githubconfig }} \
           ${{ env.includerr }}
