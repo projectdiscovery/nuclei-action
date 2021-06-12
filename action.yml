@@ -56,6 +56,10 @@ inputs:
     description: "Export nuclei results in Markdown format"
     required: false
 
+  nuclei-flags:
+    description: "Extra nuclei CLI flags to use"
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -72,6 +76,7 @@ runs:
         [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.config }} ] && cp ${{ inputs.config }} /.config/nuclei/config.yaml
         [ ! -z "${{ inputs.user-agent }}" ] && echo 'useragent=-H "${{ inputs.user-agent }}"' >> $GITHUB_ENV
+        [ ! -z "${{ inputs.nuclei-flags }}" ] && echo 'flags="${{ inputs.nuclei-flags }}"' >> $GITHUB_ENV
         ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
         ${{ inputs.github-report }} \
@@ -99,6 +104,7 @@ runs:
           ${{ env.sarif-export }} \
           ${{ env.markdown-export }} \
           ${{ env.json }} \
+          ${{ env.flags }} \
           ${{ env.githubconfig }} \
           ${{ env.includerr }}
       shell: bash
