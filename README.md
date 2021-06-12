@@ -15,7 +15,7 @@ Example Usage
 
 ```yaml
       - name: Nuclei - DAST Scan
-        uses: projectdiscovery/nuclei-action@v1.0.1
+        uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
 ```
@@ -24,7 +24,7 @@ Example Usage
 
 ```yaml
       - name: Nuclei - DAST Scan
-        uses: projectdiscovery/nuclei-action@v1.0.1
+        uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
           templates: custom_template_path
@@ -36,7 +36,7 @@ Example Usage
 
 ```yaml
       - name: Nuclei - DAST Scan
-        uses: projectdiscovery/nuclei-action@v1.0.1
+        uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
 ```
@@ -45,7 +45,7 @@ Example Usage
 
 ```yaml
       - name: Nuclei - DAST Scan
-        uses: projectdiscovery/nuclei-action@v1.0.1
+        uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
           github-report: true
@@ -56,7 +56,7 @@ Example Usage
 
 ```yaml
       - name: Nuclei - DAST Scan
-        uses: projectdiscovery/nuclei-action@v1.0.1
+        uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
 
@@ -88,7 +88,7 @@ jobs:
           go-version: 1.15
 
       - name: Nuclei - DAST Scan
-        uses: projectdiscovery/nuclei-action@v1.0.1
+        uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
 
