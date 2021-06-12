@@ -14,7 +14,7 @@ Example Usage
 **GitHub Action running Nuclei on single URL**
 
 ```yaml
-      - name: Nuclei Scan
+      - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@v1.0.1
         with:
           target: https://example.com
@@ -23,7 +23,7 @@ Example Usage
 **GitHub Action running Nuclei with custom templates**
 
 ```yaml
-      - name: Nuclei Scan
+      - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@v1.0.1
         with:
           target: https://example.com
@@ -35,7 +35,7 @@ Example Usage
 **GitHub Action running Nuclei on multiple URLs**
 
 ```yaml
-      - name: Nuclei Scan
+      - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@v1.0.1
         with:
           urls: urls.txt
@@ -44,7 +44,7 @@ Example Usage
 **GitHub Example Action running Nuclei with GitHub Issue reporting**
 
 ```yaml
-      - name: Nuclei Scan
+      - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@v1.0.1
         with:
           target: https://example.com
@@ -55,7 +55,7 @@ Example Usage
 **GitHub Example Action running Nuclei with GitHub Security Dashboard reporting**
 
 ```yaml
-      - name: Nuclei Scan
+      - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@v1.0.1
         with:
           target: https://example.com
