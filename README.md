@@ -76,7 +76,7 @@ name: Nuclei - DAST Scan
 on:
     schedule:
       - cron: '0 0 * * *'
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
   nuclei-scan:
@@ -93,7 +93,7 @@ jobs:
           target: https://example.com
 
       - name: GitHub Workflow artifacts
-      - uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v2
         with:
           name: nuclei.log
           path: nuclei.log
