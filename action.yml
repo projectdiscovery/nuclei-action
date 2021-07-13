@@ -36,7 +36,7 @@ inputs:
     required: false
 
   report-config:
-    description: "Issue reporting configuration File"
+    description: "Issue reporting configuration file"
     required: false
 
   github-report:
@@ -64,18 +64,19 @@ runs:
   using: "composite"
   steps:
     - run: |
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.4.0
+        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.4.0
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
+
     - run: |
         [ ! -z ${{ inputs.target }} ] && echo "target=-target ${{ inputs.target}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.urls }} ] && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV || echo "templates=-t ./nuclei-templates" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
         [ ! -z ${{ inputs.sarif-export }} ] && echo "sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
         [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
-        [ ! -z "${{ inputs.config }}" ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.report-config }} ] && echo "reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.config }} ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
         [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
         ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
@@ -89,12 +90,10 @@ runs:
         && echo -e "  issue-label: \"Nuclei\"" >> ~/nuclei-github-config.yaml \
         && echo "githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
         
-        nuclei -silent \
-          -update-templates \
-          -update-directory ./nuclei-templates
+        nuclei -silent
       shell: bash
     - run: |
-        
+
         nuclei \
           ${{ env.target }} \
           ${{ env.urls }} \
@@ -105,7 +104,7 @@ runs:
           ${{ env.json }} \
           ${{ env.flags }} \
           ${{ env.config }} \
-          ${{ env.githubconfig }} \
           ${{ env.reportconfig }} \
+          ${{ env.githubconfig }} \
           ${{ env.includerr }}
       shell: bash
