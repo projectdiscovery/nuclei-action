@@ -56,7 +56,7 @@ inputs:
     description: "Export nuclei results in Markdown format"
     required: false
 
-    flags:
+  flags:
     description: "Extra nuclei CLI flags to use"
     required: false
 
