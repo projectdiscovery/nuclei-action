@@ -64,7 +64,7 @@ runs:
   using: "composite"
   steps:
     - run: |
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.4.0
+        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.4.0
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
     - run: |
@@ -74,7 +74,7 @@ runs:
         [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
         [ ! -z ${{ inputs.sarif-export }} ] && echo "sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
         [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.config }} ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.config }}" ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.report-config }} ] && echo "reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
         [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
         ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
