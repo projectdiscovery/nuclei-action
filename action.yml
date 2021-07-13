@@ -76,7 +76,7 @@ runs:
         [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.config }} ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.report-config }} ] && echo "reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
-        [ ! -z "${{ inputs.flags }}" ] && echo 'flags="${{ inputs.flags }}"' >> $GITHUB_ENV
+        [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
         ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
         ${{ inputs.github-report }} \
