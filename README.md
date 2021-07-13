@@ -41,6 +41,27 @@ Example Usage
           urls: urls.txt
 ```
 
+**GitHub Action running Nuclei with CLI flags**
+
+```yaml
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: urls.txt
+          flags: "-severity critical,high,medium,low -stats"
+```
+
+**GitHub Action running Nuclei with Config files**
+
+```yaml
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: urls.txt
+          config: config.yaml
+          report-config: issues.yaml
+```
+
 **GitHub Example Action running Nuclei with GitHub Issue reporting**
 
 ```yaml
@@ -116,7 +137,7 @@ Available Inputs
 | `json`            | Write results in JSON format                        | false    |
 | `include-rr`      | Include request/response in results                 | false    |
 | `config`          | Set custom nuclei config file to use                | false    |
-| `user-agent`      | Set custom user-agent header                        | false    |
+| `report-config`   | Issue reporting configuration file                  | false    |
 | `github-report`   | Set `true` to generate Github issue with the report | false    |
 | `github-token`    | Set the Github Token                                | false    |
 | `sarif-export`    | File to export result (default - sarif.nuclei)      | false    |
