@@ -51,6 +51,16 @@ Example Usage
           flags: "-severity critical,high,medium,low -stats"
 ```
 
+**GitHub Action running Nuclei with Custom UA**
+
+```yaml
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          urls: urls.txt
+          user-agent: "User-Agent: Nuclei"
+```
+
 **GitHub Action running Nuclei with Config files**
 
 ```yaml
@@ -137,6 +147,7 @@ Available Inputs
 | `json`            | Write results in JSON format                        | false    |
 | `include-rr`      | Include request/response in results                 | false    |
 | `config`          | Set custom nuclei config file to use                | false    |
+| `user-agent`      | Set custom user-agent header                        | false    |
 | `report-config`   | Issue reporting configuration file                  | false    |
 | `github-report`   | Set `true` to generate Github issue with the report | false    |
 | `github-token`    | Set the Github Token                                | false    |

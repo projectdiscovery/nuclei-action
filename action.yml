@@ -31,6 +31,10 @@ inputs:
     required: false
     default: false
 
+  user-agent:
+    description: "Set a Custom User-Agent header"
+    required: false
+
   config:
     description: "Nuclei configuration file"
     required: false
@@ -77,6 +81,7 @@ runs:
         [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.report-config }} ] && echo "reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.config }} ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.user-agent }}" ] && echo "useragent=-H ${{ inputs.user-agent }}" >> $GITHUB_ENV
         [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
         ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
@@ -106,5 +111,6 @@ runs:
           ${{ env.config }} \
           ${{ env.reportconfig }} \
           ${{ env.githubconfig }} \
+          ${{ env.useragent }} \
           ${{ env.includerr }}
       shell: bash
