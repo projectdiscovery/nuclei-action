@@ -31,12 +31,16 @@ inputs:
     required: false
     default: false
 
+  user-agent:
+    description: "Set a Custom User-Agent header"
+    required: false
+
   config:
     description: "Nuclei configuration file"
     required: false
 
-  user-agent:
-    description: "Set a Custom User-Agent header"
+  report-config:
+    description: "Issue reporting configuration file"
     required: false
 
   github-report:
@@ -56,7 +60,7 @@ inputs:
     description: "Export nuclei results in Markdown format"
     required: false
 
-  nuclei-flags:
+  flags:
     description: "Extra nuclei CLI flags to use"
     required: false
 
@@ -64,19 +68,21 @@ runs:
   using: "composite"
   steps:
     - run: |
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.3.8
+        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.4.0
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
+
     - run: |
         [ ! -z ${{ inputs.target }} ] && echo "target=-target ${{ inputs.target}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.urls }} ] && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV || echo "templates=-t ./nuclei-templates" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
         [ ! -z ${{ inputs.sarif-export }} ] && echo "sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
         [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.config }} ] && cp ${{ inputs.config }} /.config/nuclei/config.yaml
-        [ ! -z "${{ inputs.user-agent }}" ] && echo 'useragent=-H "${{ inputs.user-agent }}"' >> $GITHUB_ENV
-        [ ! -z "${{ inputs.nuclei-flags }}" ] && echo 'flags="${{ inputs.nuclei-flags }}"' >> $GITHUB_ENV
+        [ ! -z ${{ inputs.report-config }} ] && echo "reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.config }} ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.user-agent }}" ] && echo "useragent=-H ${{ inputs.user-agent }}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
         ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
         ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
         ${{ inputs.github-report }} \
@@ -89,22 +95,22 @@ runs:
         && echo -e "  issue-label: \"Nuclei\"" >> ~/nuclei-github-config.yaml \
         && echo "githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
         
-        nuclei -silent \
-          -update-templates \
-          -update-directory ./nuclei-templates
+        nuclei -silent
       shell: bash
     - run: |
-        
+
         nuclei \
           ${{ env.target }} \
           ${{ env.urls }} \
           ${{ env.templates }} \
-          ${{ env.useragent }} \
           ${{ env.output }} \
           ${{ env.sarif-export }} \
           ${{ env.markdown-export }} \
           ${{ env.json }} \
           ${{ env.flags }} \
+          ${{ env.config }} \
+          ${{ env.reportconfig }} \
           ${{ env.githubconfig }} \
+          ${{ env.useragent }} \
           ${{ env.includerr }}
       shell: bash
