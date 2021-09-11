@@ -68,7 +68,7 @@ runs:
   using: "composite"
   steps:
     - run: |
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.4.2
+        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.4.3
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
       shell: bash
 
