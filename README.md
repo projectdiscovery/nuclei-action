@@ -89,7 +89,7 @@ jobs:
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
-          user-agent: "User-Agent: Nuclei"
+          user-agent: "User-Agent:'Nuclei - DAST Scan (Have a nice day)'"
 ```
 
 **GitHub Action running Nuclei with Config files**
