@@ -3,13 +3,44 @@
   <br>
 </h1>
 
-[Nuclei Action](https://github.com/projectdiscovery/nuclei-action) makes it easy to orchestrate [Nuclei](https://github.com/projectdiscovery/nuclei) with [GitHub Action](https://github.com/features/actions).
+This Nuclei Action makes it easy to orchestrate [Nuclei](https://github.com/projectdiscovery/nuclei) with [GitHub Action](https://github.com/features/actions).
 Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuclei-templates) into powerful continuous security workflows and make it part of your secure software development life cycle.
-
-
 
 Example Usage
 -----
+
+**Workflow** - `.github/workflows/nuclei.yml`
+
+```yaml
+name: Nuclei - DAST Scan
+
+on:
+    schedule:
+      - cron: '0 0 * * *'
+    workflow_dispatch:
+
+jobs:
+  nuclei-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          target: https://example.com
+
+      - name: GitHub Workflow artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: nuclei.log
+          path: nuclei.log
+
+      - name: GitHub Security Dashboard Alerts update
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: nuclei.sarif
+```
 
 **GitHub Action running Nuclei on single URL**
 
@@ -58,7 +89,7 @@ Example Usage
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
-          user-agent: "User-Agent: Nuclei"
+          user-agent: "User-Agent:'Nuclei - DAST Scan (Have a nice day)'"
 ```
 
 **GitHub Action running Nuclei with Config files**
@@ -92,44 +123,6 @@ Example Usage
           target: https://example.com
 
       - name: GitHub Security Dashboard Alerts
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: nuclei.sarif
-```
-
-
-**Workflow** - `.github/workflows/nuclei.yml`
-
-
-```yaml
-name: Nuclei - DAST Scan
-
-on:
-    schedule:
-      - cron: '0 0 * * *'
-    workflow_dispatch:
-
-jobs:
-  nuclei-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.15
-
-      - name: Nuclei - DAST Scan
-        uses: projectdiscovery/nuclei-action@main
-        with:
-          target: https://example.com
-
-      - name: GitHub Workflow artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: nuclei.log
-          path: nuclei.log
-
-      - name: GitHub Security Dashboard Alerts update
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: nuclei.sarif
