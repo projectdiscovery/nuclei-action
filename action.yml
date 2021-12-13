@@ -69,7 +69,7 @@ runs:
   steps:
     - run: |
         echo "::group::Install Nuclei with go get"
-        [ ! -x /home/runner/go/bin/nuclei ] && GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.5.4
+        [ ! -x /home/runner/go/bin/nuclei ] && go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@v2.5.4
         echo "/home/runner/go/bin/" >> $GITHUB_PATH
         echo "::endgroup::"
       shell: bash
