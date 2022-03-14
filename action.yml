@@ -75,18 +75,18 @@ runs:
       shell: bash
 
     - run: |
-        [ ! -z ${{ inputs.target }} ] && echo "target=-target ${{ inputs.target}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.urls }} ] && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.sarif-export }} ] && echo "sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.report-config }} ] && echo "reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.config }} ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
-        [ ! -z "${{ inputs.user-agent }}" ] && echo "useragent=-H ${{ inputs.user-agent }}" >> $GITHUB_ENV
-        [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
-        ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
-        ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.target }} ] && echo "n-target=-target ${{ inputs.target}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.urls }} ] && echo "n-urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.templates }} ] && echo "n-templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.output }} ] && echo "n-output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.sarif-export }} ] && echo "n-sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.markdown-export }} ] && echo "n-markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.report-config }} ] && echo "n-reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.config }} ] && echo "n-config=-config ${{ inputs.config}}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.user-agent }}" ] && echo "n-useragent=-H ${{ inputs.user-agent }}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.flags }}" ] && echo "n-flags=${{ inputs.flags }}" >> $GITHUB_ENV
+        ${{ inputs.json }} && echo "n-json=-json" >> $GITHUB_ENV
+        ${{ inputs.include-rr }} && echo "n-includerr=-irr" >> $GITHUB_ENV
         ${{ inputs.github-report }} \
         && touch ~/nuclei-github-config.yaml \
         && echo -e "github:" >> ~/nuclei-github-config.yaml \
@@ -95,24 +95,24 @@ runs:
         && echo -e "  token: \"${{ inputs.github-token }}\"" >> ~/nuclei-github-config.yaml \
         && echo -e "  project-name: \"${GITHUB_REPOSITORY#*/}\"" >> ~/nuclei-github-config.yaml \
         && echo -e "  issue-label: \"Nuclei\"" >> ~/nuclei-github-config.yaml \
-        && echo "githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
+        && echo "n-githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
         
         nuclei -silent
       shell: bash
     - run: |
 
         nuclei \
-          ${{ env.target }} \
-          ${{ env.urls }} \
-          ${{ env.templates }} \
-          ${{ env.output }} \
-          ${{ env.sarif-export }} \
-          ${{ env.markdown-export }} \
-          ${{ env.json }} \
-          ${{ env.flags }} \
-          ${{ env.config }} \
-          ${{ env.reportconfig }} \
-          ${{ env.githubconfig }} \
-          ${{ env.useragent }} \
-          ${{ env.includerr }}
+          ${{ env.n-target }} \
+          ${{ env.n-urls }} \
+          ${{ env.n-templates }} \
+          ${{ env.n-output }} \
+          ${{ env.n-sarif-export }} \
+          ${{ env.n-markdown-export }} \
+          ${{ env.n-json }} \
+          ${{ env.n-flags }} \
+          ${{ env.n-config }} \
+          ${{ env.n-reportconfig }} \
+          ${{ env.n-githubconfig }} \
+          ${{ env.n-useragent }} \
+          ${{ env.n-includerr }}
       shell: bash
