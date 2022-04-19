@@ -17,6 +17,10 @@ inputs:
     description: "Templates input file/files to check across hosts"
     required: false
 
+  workflows:
+    description: "Workflows input file/files to check across hosts"
+    required: false
+
   output:
     description: "File to save output result"
     required: false
@@ -78,6 +82,7 @@ runs:
         [ ! -z ${{ inputs.target }} ] && echo "nuclei-target=-target ${{ inputs.target}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.urls }} ] && echo "nuclei-urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.templates }} ] && echo "nuclei-templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.workflows }} ] && echo "nuclei-workflows=-w ${{ inputs.workflows }}" >> $GITHUB_ENV
         [ ! -z ${{ inputs.output }} ] && echo "nuclei-output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
         [ ! -z ${{ inputs.sarif-export }} ] && echo "nuclei-sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
         [ ! -z ${{ inputs.markdown-export }} ] && echo "nuclei-markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
@@ -96,15 +101,17 @@ runs:
         && echo -e "  project-name: \"${GITHUB_REPOSITORY#*/}\"" >> ~/nuclei-github-config.yaml \
         && echo -e "  issue-label: \"Nuclei\"" >> ~/nuclei-github-config.yaml \
         && echo "nuclei-githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
-        
+
         nuclei -silent
       shell: bash
+
     - run: |
 
         nuclei \
           ${{ env.nuclei-target }} \
           ${{ env.nuclei-urls }} \
           ${{ env.nuclei-templates }} \
+          ${{ env.nuclei-workflows }} \
           ${{ env.nuclei-output }} \
           ${{ env.nuclei-sarif-export }} \
           ${{ env.nuclei-markdown-export }} \

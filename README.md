@@ -66,6 +66,16 @@ jobs:
 
 <ins>As default, all the default [nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) are used for scan.</ins>
 
+**GitHub Action running Nuclei with custom workflows**
+
+```yaml
+      - name: Nuclei - DAST Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          target: https://example.com
+          workflows: custom_workflow_path
+```
+
 **GitHub Action running Nuclei on multiple URLs**
 
 ```yaml
@@ -139,6 +149,7 @@ Available Inputs
 | `target`          | Target URL to run nuclei scan                       | true     |
 | `urls`            | List of urls to run nuclei scan                     | false    |
 | `templates`       | Custom templates directory/file to run nuclei scan  | false    |
+| `workflows`       | Custom workflows file/files to check across hosts   | false    |
 | `output`          | File to save output result (default - nuclei.log)   | false    |
 | `json`            | Write results in JSON format                        | false    |
 | `include-rr`      | Include request/response in results                 | false    |
