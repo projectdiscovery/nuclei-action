@@ -149,6 +149,7 @@ Available Inputs
 | `target`          | Target URL to run nuclei scan                       | true     |
 | `urls`            | List of urls to run nuclei scan                     | false    |
 | `templates`       | Custom templates directory/file to run nuclei scan  | false    |
+| `workflows`       | Custom workflows file/files to check across hosts   | false    |
 | `output`          | File to save output result (default - nuclei.log)   | false    |
 | `json`            | Write results in JSON format                        | false    |
 | `include-rr`      | Include request/response in results                 | false    |
