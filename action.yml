@@ -75,18 +75,18 @@ runs:
       shell: bash
 
     - run: |
-        [ ! -z ${{ inputs.target }} ] && echo "target=-target ${{ inputs.target}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.urls }} ] && echo "urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.templates }} ] && echo "templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.output }} ] && echo "output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.sarif-export }} ] && echo "sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.markdown-export }} ] && echo "markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.report-config }} ] && echo "reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
-        [ ! -z ${{ inputs.config }} ] && echo "config=-config ${{ inputs.config}}" >> $GITHUB_ENV
-        [ ! -z "${{ inputs.user-agent }}" ] && echo "useragent=-H ${{ inputs.user-agent }}" >> $GITHUB_ENV
-        [ ! -z "${{ inputs.flags }}" ] && echo "flags=${{ inputs.flags }}" >> $GITHUB_ENV
-        ${{ inputs.json }} && echo "json=-json" >> $GITHUB_ENV
-        ${{ inputs.include-rr }} && echo "includerr=-irr" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.target }} ] && echo "nuclei-target=-target ${{ inputs.target}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.urls }} ] && echo "nuclei-urls=-list ${{ inputs.urls}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.templates }} ] && echo "nuclei-templates=-t ${{ inputs.templates }}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.output }} ] && echo "nuclei-output=-o ${{ inputs.output}}" >> $GITHUB_ENV || echo "output=-o nuclei.log" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.sarif-export }} ] && echo "nuclei-sarif-export=-se ${{ inputs.sarif-export}}" >> $GITHUB_ENV || echo "sarif-export=-se nuclei.sarif" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.markdown-export }} ] && echo "nuclei-markdown-export=-me ${{ inputs.markdown-export}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.report-config }} ] && echo "nuclei-reportconfig=-rc ${{ inputs.report-config}}" >> $GITHUB_ENV
+        [ ! -z ${{ inputs.config }} ] && echo "nuclei-config=-config ${{ inputs.config}}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.user-agent }}" ] && echo "nuclei-useragent=-H ${{ inputs.user-agent }}" >> $GITHUB_ENV
+        [ ! -z "${{ inputs.flags }}" ] && echo "nuclei-flags=${{ inputs.flags }}" >> $GITHUB_ENV
+        ${{ inputs.json }} && echo "nuclei-json=-json" >> $GITHUB_ENV
+        ${{ inputs.include-rr }} && echo "nuclei-includerr=-irr" >> $GITHUB_ENV
         ${{ inputs.github-report }} \
         && touch ~/nuclei-github-config.yaml \
         && echo -e "github:" >> ~/nuclei-github-config.yaml \
@@ -95,24 +95,24 @@ runs:
         && echo -e "  token: \"${{ inputs.github-token }}\"" >> ~/nuclei-github-config.yaml \
         && echo -e "  project-name: \"${GITHUB_REPOSITORY#*/}\"" >> ~/nuclei-github-config.yaml \
         && echo -e "  issue-label: \"Nuclei\"" >> ~/nuclei-github-config.yaml \
-        && echo "githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
+        && echo "nuclei-githubconfig=-rc ~/nuclei-github-config.yaml" >> $GITHUB_ENV
         
         nuclei -silent
       shell: bash
     - run: |
 
         nuclei \
-          ${{ env.target }} \
-          ${{ env.urls }} \
-          ${{ env.templates }} \
-          ${{ env.output }} \
-          ${{ env.sarif-export }} \
-          ${{ env.markdown-export }} \
-          ${{ env.json }} \
-          ${{ env.flags }} \
-          ${{ env.config }} \
-          ${{ env.reportconfig }} \
-          ${{ env.githubconfig }} \
-          ${{ env.useragent }} \
-          ${{ env.includerr }}
+          ${{ env.nuclei-target }} \
+          ${{ env.nuclei-urls }} \
+          ${{ env.nuclei-templates }} \
+          ${{ env.nuclei-output }} \
+          ${{ env.nuclei-sarif-export }} \
+          ${{ env.nuclei-markdown-export }} \
+          ${{ env.nuclei-json }} \
+          ${{ env.nuclei-flags }} \
+          ${{ env.nuclei-config }} \
+          ${{ env.nuclei-reportconfig }} \
+          ${{ env.nuclei-githubconfig }} \
+          ${{ env.nuclei-useragent }} \
+          ${{ env.nuclei-includerr }}
       shell: bash
