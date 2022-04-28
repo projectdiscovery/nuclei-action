@@ -1,0 +1,33 @@
+{
+  "name": "nuclei-action",
+  "version": "2.0.0",
+  "description": "Dynamic Application Security Testing (DAST) with Nuclei",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx ncc build src/index.js --license licenses.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/projectdiscovery/nuclei-action.git"
+  },
+  "keywords": [
+    "nuclei",
+    "dast",
+    "security"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/projectdiscovery/nuclei-action/issues"
+  },
+  "homepage": "https://github.com/projectdiscovery/nuclei-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.7.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/tool-cache": "^1.7.2",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.4"
+  }
+}
