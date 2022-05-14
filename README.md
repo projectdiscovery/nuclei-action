@@ -40,7 +40,7 @@ jobs:
           path: nuclei.log
 
       - name: GitHub Security Dashboard Alerts update
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: nuclei.sarif
 ```
@@ -136,7 +136,7 @@ jobs:
           target: https://example.com
 
       - name: GitHub Security Dashboard Alerts
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: nuclei.sarif
 ```
