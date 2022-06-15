@@ -24,9 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
 
       - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@main
@@ -118,6 +115,12 @@ jobs:
 
 **GitHub Example Action running Nuclei with GitHub Issue reporting**
 
+Setting permissions for `GITHUB_TOKEN`, according to the [github actions docs](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token).
+```yaml
+permissions:
+  issues: write
+```
+
 ```yaml
       - name: Nuclei - DAST Scan
         uses: projectdiscovery/nuclei-action@main
@@ -161,3 +164,10 @@ Available Inputs
 | `sarif-export`    | File to export result (default - sarif.nuclei)      | false    |
 | `markdown-export` | Directory to export markdown results                | false    |
 | `nuclei-flags`    | More Nuclei CLI flags to use                        | false    |
+
+
+## Contributing
+
+This action uses Javascript [github actions toolkit](https://github.com/actions/toolkit). Code using the `src` directory, and before submitting your PR, check and run a `npm run build`, otherwise your changes will not be applied to the final action which resides in the `dist` directory.
+
+We use this way to avoid jobs having to install npm modules and create a final version without dependencies on our code.
