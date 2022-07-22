@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as installer from './installer';
 import { generateGithubReportFile } from './yaml';
+import { parseFlagsToArray } from './utils';
 
 const target = core.getInput('target', { required: false });
 const urls = core.getInput('urls', { required: false });
@@ -55,10 +56,11 @@ async function run() {
     if (reportConfig) params.push(`-rc=${reportConfig}`);
     if (config) params.push(`-config=${config}`);
     if (userAgent) params.push(`-H=${userAgent}`);
-    if (flags) params.push(flags);
     params.push(`-o=${ output ? output : 'nuclei.log' }`);
     if (json) params.push('-json');
     if (includeRR) params.push('-irr');
+
+    if (flags) params.push(...parseFlagsToArray(flags));
 
     // If everything is fine and github-report is set, generate the yaml config file.
     if (githubRepot) {

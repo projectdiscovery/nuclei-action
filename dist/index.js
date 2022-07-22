@@ -9867,7 +9867,13 @@ async function generateGithubReportFile(token) {
             reject(err);
     });
 }
+;// CONCATENATED MODULE: ./src/utils.js
+function parseFlagsToArray(rawFlags) {
+    const re = /(?:(?:^|\s)-[-a-z]+)(?:(?:\s|=)(?:[^-][0-9a-z-\S]+))?/g;
+    return rawFlags.match(re).map(token => token.trim()).map(token => token.replace(' ', '='));
+}
 ;// CONCATENATED MODULE: ./src/index.js
+
 
 
 
@@ -9925,10 +9931,11 @@ async function run() {
     if (reportConfig) params.push(`-rc=${reportConfig}`);
     if (config) params.push(`-config=${config}`);
     if (userAgent) params.push(`-H=${userAgent}`);
-    if (flags) params.push(flags);
     params.push(`-o=${ output ? output : 'nuclei.log' }`);
     if (src_json) params.push('-json');
     if (includeRR) params.push('-irr');
+
+    if (flags) params.push(...parseFlagsToArray(flags));
 
     // If everything is fine and github-report is set, generate the yaml config file.
     if (githubRepot) {
