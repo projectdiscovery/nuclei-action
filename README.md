@@ -12,7 +12,7 @@ Example Usage
 **Workflow** - `.github/workflows/nuclei.yml`
 
 ```yaml
-name: Nuclei - DAST Scan
+name: Nuclei - Vulnerability Scan
 
 on:
     schedule:
@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
@@ -45,7 +45,7 @@ jobs:
 **GitHub Action running Nuclei on single URL**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
@@ -54,7 +54,7 @@ jobs:
 **GitHub Action running Nuclei with custom templates**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
@@ -66,7 +66,7 @@ jobs:
 **GitHub Action running Nuclei with custom workflows**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
@@ -76,7 +76,7 @@ jobs:
 **GitHub Action running Nuclei on multiple URLs**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
@@ -85,7 +85,7 @@ jobs:
 **GitHub Action running Nuclei with CLI flags**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
@@ -95,17 +95,17 @@ jobs:
 **GitHub Action running Nuclei with Custom UA**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
-          user-agent: "User-Agent:'Nuclei - DAST Scan (Have a nice day)'"
+          user-agent: "User-Agent:'Nuclei - Vulnerability Scan (Have a nice day)'"
 ```
 
 **GitHub Action running Nuclei with Config files**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           urls: urls.txt
@@ -122,7 +122,7 @@ permissions:
 ```
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
@@ -133,7 +133,7 @@ permissions:
 **GitHub Example Action running Nuclei with GitHub Security Dashboard reporting**
 
 ```yaml
-      - name: Nuclei - DAST Scan
+      - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com

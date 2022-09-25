@@ -1,4 +1,4 @@
-name: "Nuclei - DAST Scan"
+name: "Nuclei - Vulnerability Scan"
 description: "Nuclei is a fast and customisable vulnerability scanner based on simple YAML based DSL"
 branding:
   icon: "activity"
