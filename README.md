@@ -163,7 +163,7 @@ Available Inputs
 | `github-token`    | Set the Github Token                                | false    |
 | `sarif-export`    | File to export result (default - sarif.nuclei)      | false    |
 | `markdown-export` | Directory to export markdown results                | false    |
-| `nuclei-flags`    | More Nuclei CLI flags to use                        | false    |
+| `flags`           | More Nuclei CLI flags to use                        | false    |
 
 
 ## Contributing
