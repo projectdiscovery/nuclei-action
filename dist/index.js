@@ -9932,7 +9932,7 @@ async function run() {
     if (config) params.push(`-config=${config}`);
     if (userAgent) params.push(`-H=${userAgent}`);
     params.push(`-o=${ output ? output : 'nuclei.log' }`);
-    if (src_json) params.push('-json');
+    if (src_json) params.push('-jsonl');
     if (includeRR) params.push('-irr');
 
     if (flags) params.push(...parseFlagsToArray(flags));
