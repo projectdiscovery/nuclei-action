@@ -6799,7 +6799,13 @@ async function getLatestInfo() {
 async function downloadAndInstall(selectedVersion) {
 	const toolName = "nuclei";
 	const latest = await getLatestInfo();
-	const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
+  const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
+
+  let cachedPath = tool_cache.find(toolName, version);
+  let binPath = `${cachedPath}/${toolName}`;
+  if (external_fs_default().existsSync(binPath)) {
+    return binPath
+  }
 
 	core.startGroup(`Download and install Nuclei ${version}`);
 
@@ -6818,7 +6824,9 @@ async function downloadAndInstall(selectedVersion) {
 		throw new Error("Unable to extract Nuclei.");
 	}
 
-	const binPath = `${installDir}/${toolName}`
+  cachedPath = await tool_cache.cacheFile(`${installDir}/${toolName}`, toolName, toolName, version);
+  binPath = `${cachedPath}/${toolName}`;
+	
 	external_fs_default().chmodSync(binPath, "777");
 
 	core.info(`Nuclei ${version} was successfully installed to ${installDir}.`);
