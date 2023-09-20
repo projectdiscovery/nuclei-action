@@ -31,7 +31,13 @@ inputs:
     default: false
 
   include-rr:
-    description: "Write requests/responses for matches in JSON output"
+    deprecationMessage: "Use omit-raw instead. This will be removed in a future release"
+    description: "Write requests/responses for matches in JSON output [DEPRECATED]"
+    required: false
+    default: true
+
+  omit-raw:
+    description: "Exclude request/response in results"
     required: false
     default: false
 

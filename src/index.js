@@ -18,6 +18,7 @@ const output = core.getInput('output', { required: false });
 
 const json = core.getBooleanInput('json', { required: false });
 const includeRR = core.getBooleanInput('include-rr', { required: false });
+const omitRaw = core.getBooleanInput('omit-raw', { required: false });
 
 const githubRepot = core.getBooleanInput('github-report', { required: false });
 const githubToken = core.getInput('github-token', { required: false });
@@ -59,6 +60,7 @@ async function run() {
     params.push(`-o=${ output ? output : 'nuclei.log' }`);
     if (json) params.push('-json');
     if (includeRR) params.push('-irr');
+    if (omitRaw) params.push('-or');
 
     if (flags) params.push(...parseFlagsToArray(flags));
 
