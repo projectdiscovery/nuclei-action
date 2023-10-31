@@ -23,6 +23,8 @@ const omitRaw = core.getBooleanInput('omit-raw', { required: false });
 const githubRepot = core.getBooleanInput('github-report', { required: false });
 const githubToken = core.getInput('github-token', { required: false });
 
+const nucleiVersion = core.getInput('nuclei-version', { required: false });
+
 let execOutput = '';
 let execError = '';
 
@@ -39,7 +41,7 @@ options.listeners = {
 async function run() {
 	try {
 		// download and install
-		const binPath = await installer.downloadAndInstall();
+		const binPath = await installer.downloadAndInstall(nucleiVersion);
     const params = [];
 
     if (!target && !urls) {

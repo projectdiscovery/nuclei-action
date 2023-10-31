@@ -37,7 +37,7 @@ async function getLatestInfo() {
 export async function downloadAndInstall(selectedVersion) {
 	const toolName = "nuclei";
 	const latest = await getLatestInfo();
-    const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
+	const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
 
 	core.startGroup(`Download and install Nuclei ${version}`);
 

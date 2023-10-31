@@ -6799,7 +6799,7 @@ async function getLatestInfo() {
 async function downloadAndInstall(selectedVersion) {
 	const toolName = "nuclei";
 	const latest = await getLatestInfo();
-    const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
+	const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
 
 	core.startGroup(`Download and install Nuclei ${version}`);
 
@@ -6825,6 +6825,7 @@ async function downloadAndInstall(selectedVersion) {
 	core.endGroup();
 	return binPath
 }
+
 ;// CONCATENATED MODULE: ./node_modules/js-yaml/dist/js-yaml.mjs
 
 /*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
@@ -10740,6 +10741,8 @@ const omitRaw = core.getBooleanInput('omit-raw', { required: false });
 const githubRepot = core.getBooleanInput('github-report', { required: false });
 const githubToken = core.getInput('github-token', { required: false });
 
+const nucleiVersion = core.getInput('nuclei-version', { required: false });
+
 let execOutput = '';
 let execError = '';
 
@@ -10756,7 +10759,7 @@ options.listeners = {
 async function run() {
 	try {
 		// download and install
-		const binPath = await downloadAndInstall();
+		const binPath = await downloadAndInstall(nucleiVersion);
     const params = [];
 
     if (!target && !urls) {
@@ -10795,6 +10798,7 @@ async function run() {
 }
 
 run();
+
 })();
 
 module.exports = __webpack_exports__;
