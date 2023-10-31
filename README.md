@@ -148,7 +148,7 @@ Available Inputs
 ------
 
 | Key               | Description                                                      | Required |
-| ----------------- | ---------------------------------------------------------------- | -------- |
+| ----------------- |------------------------------------------------------------------| -------- |
 | `target`          | Target URL to run nuclei scan                                    | true     |
 | `urls`            | List of urls to run nuclei scan                                  | false    |
 | `templates`       | Custom templates directory/file to run nuclei scan               | false    |
@@ -165,6 +165,7 @@ Available Inputs
 | `sarif-export`    | File to export result (default - sarif.nuclei)                   | false    |
 | `markdown-export` | Directory to export markdown results                             | false    |
 | `flags`           | More Nuclei CLI flags to use                                     | false    |
+| `nuclei-version`  | Use this specific nucleai version, by default latest is used     | false    |
 
 
 ## Contributing

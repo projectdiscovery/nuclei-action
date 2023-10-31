@@ -74,6 +74,10 @@ inputs:
     description: "Extra nuclei CLI flags to use"
     required: false
 
+  nuclei-version:
+    description: "Nuclei version to use, by default the latest version is used"
+    required: false
+
 runs:
   using: 'node16'
   main: 'dist/index.js'
