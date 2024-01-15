@@ -14,7 +14,7 @@ inputs:
     required: false
 
   templates:
-    description: "Templates input file/files to check across hosts"
+    description: "Templates input file(s)/URL to check across hosts"
     required: false
 
   workflows:
