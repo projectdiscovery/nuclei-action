@@ -52,7 +52,15 @@ async function run() {
     // Setting up params
     if (target) params.push(`-target=${target}`);
     if (urls) params.push(`-list=${urls}`);
-    if (templates) params.push(`-t=${templates}`);
+    if (templates) {
+      try {
+        new URL(templates)
+        params.push(`-turl=${templates}`);
+      }
+      catch(_) {
+        params.push(`-t=${templates}`);
+      }
+    }
     if (workflows) params.push(`-w=${workflows}`);
     params.push(`-se=${sarifExport ? sarifExport : 'nuclei.sarif'}`);
     if (markdownExport) params.push(`-me=${markdownExport}`);
