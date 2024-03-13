@@ -81,6 +81,7 @@ async function run() {
     }
 
 		// run tool
+    delete process.env.GITHUB_TOKEN
     exec.exec(binPath, params, options);
 	} catch (error) {
 		core.setFailed(error.message);
