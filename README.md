@@ -23,7 +23,7 @@ jobs:
   nuclei-scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
@@ -31,13 +31,13 @@ jobs:
           target: https://example.com
 
       - name: GitHub Workflow artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: nuclei.log
           path: nuclei.log
 
       - name: GitHub Security Dashboard Alerts update
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: nuclei.sarif
 ```
@@ -139,7 +139,7 @@ permissions:
           target: https://example.com
 
       - name: GitHub Security Dashboard Alerts
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: nuclei.sarif
 ```
@@ -147,23 +147,25 @@ permissions:
 Available Inputs
 ------
 
-| Key               | Description                                         | Required |
-| ----------------- | --------------------------------------------------- | -------- |
-| `target`          | Target URL to run nuclei scan                       | true     |
-| `urls`            | List of urls to run nuclei scan                     | false    |
-| `templates`       | Custom templates directory/file to run nuclei scan  | false    |
-| `workflows`       | Custom workflows file/files to check across hosts   | false    |
-| `output`          | File to save output result (default - nuclei.log)   | false    |
-| `json`            | Write results in JSON format                        | false    |
-| `include-rr`      | Include request/response in results                 | false    |
-| `config`          | Set custom nuclei config file to use                | false    |
-| `user-agent`      | Set custom user-agent header                        | false    |
-| `report-config`   | Issue reporting configuration file                  | false    |
-| `github-report`   | Set `true` to generate Github issue with the report | false    |
-| `github-token`    | Set the Github Token                                | false    |
-| `sarif-export`    | File to export result (default - sarif.nuclei)      | false    |
-| `markdown-export` | Directory to export markdown results                | false    |
-| `flags`           | More Nuclei CLI flags to use                        | false    |
+| Key               | Description                                                      | Required |
+| ----------------- |------------------------------------------------------------------| -------- |
+| `target`          | Target URL to run nuclei scan                                    | true     |
+| `urls`            | List of urls to run nuclei scan                                  | false    |
+| `templates`       | Custom templates directory/file to run nuclei scan               | false    |
+| `workflows`       | Custom workflows file/files to check across hosts                | false    |
+| `output`          | File to save output result (default - nuclei.log)                | false    |
+| `json`            | Write results in JSON format                                     | false    |
+| `include-rr`      | Include request/response in results [DEPRECATED use `-omit-raw`] | true     |
+| `omit-raw`        | Exclude request/response in results                              | false    |
+| `config`          | Set custom nuclei config file to use                             | false    |
+| `user-agent`      | Set custom user-agent header                                     | false    |
+| `report-config`   | Issue reporting configuration file                               | false    |
+| `github-report`   | Set `true` to generate Github issue with the report              | false    |
+| `github-token`    | Set the Github Token                                             | false    |
+| `sarif-export`    | File to export result (default - nuclei.sarif)                   | false    |
+| `markdown-export` | Directory to export markdown results                             | false    |
+| `flags`           | More Nuclei CLI flags to use                                     | false    |
+| `nuclei-version`  | Use this specific nucleai version, by default latest is used     | false    |
 
 
 ## Contributing

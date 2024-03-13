@@ -6833,6 +6833,7 @@ async function downloadAndInstall(selectedVersion) {
 	core.endGroup();
 	return binPath
 }
+
 ;// CONCATENATED MODULE: ./node_modules/js-yaml/dist/js-yaml.mjs
 
 /*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
@@ -10743,9 +10744,12 @@ const output = core.getInput('output', { required: false });
 
 const src_json = core.getBooleanInput('json', { required: false });
 const includeRR = core.getBooleanInput('include-rr', { required: false });
+const omitRaw = core.getBooleanInput('omit-raw', { required: false });
 
 const githubRepot = core.getBooleanInput('github-report', { required: false });
 const githubToken = core.getInput('github-token', { required: false });
+
+const nucleiVersion = core.getInput('nuclei-version', { required: false });
 
 let execOutput = '';
 let execError = '';
@@ -10763,7 +10767,7 @@ options.listeners = {
 async function run() {
 	try {
 		// download and install
-		const binPath = await downloadAndInstall();
+		const binPath = await downloadAndInstall(nucleiVersion);
     const params = [];
 
     if (!target && !urls) {
@@ -10784,6 +10788,7 @@ async function run() {
     params.push(`-o=${ output ? output : 'nuclei.log' }`);
     if (src_json) params.push('-json');
     if (includeRR) params.push('-irr');
+    if (omitRaw) params.push('-or');
 
     if (flags) params.push(...parseFlagsToArray(flags));
 
@@ -10802,6 +10807,7 @@ async function run() {
 }
 
 run();
+
 })();
 
 module.exports = __webpack_exports__;

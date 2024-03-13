@@ -37,13 +37,14 @@ async function getLatestInfo() {
 export async function downloadAndInstall(selectedVersion) {
 	const toolName = "nuclei";
 	const latest = await getLatestInfo();
-  const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
+	
+	const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
 
-  let cachedPath = tc.find(toolName, version);
-  let binPath = `${cachedPath}/${toolName}`;
-  if (fs.existsSync(binPath)) {
-    return binPath
-  }
+	let cachedPath = tc.find(toolName, version);
+	let binPath = `${cachedPath}/${toolName}`;
+	if (fs.existsSync(binPath)) {
+		return binPath
+	}
 
 	core.startGroup(`Download and install Nuclei ${version}`);
 
@@ -57,7 +58,7 @@ export async function downloadAndInstall(selectedVersion) {
 		throw new Error(`Unable to download Nuclei from ${url}.`);
 	}
 
-	const installDir = await tc.extractZip(downloadDir);
+	const installDir = await tc.extractZip(downloadDir, process.env.GITHUB_WORKSPACE);
 	if (installDir == null) {
 		throw new Error("Unable to extract Nuclei.");
 	}
