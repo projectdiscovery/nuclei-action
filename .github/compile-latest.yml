@@ -1,0 +1,48 @@
+name: 🏗️ Compile latest changes
+
+on:
+  # pull_request:
+  #   branches:
+  #     - main
+  
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Ensures history is available for commits
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit changes
+        id: commit-changes
+        run: |
+          git add dist/
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update dist with compiled changes"
+          echo "::set-output name=CHANGES::$(git rev-parse HEAD)"
+
+      - name: Push changes
+        if: steps.commit-changes.outputs.CHANGES
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
