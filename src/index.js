@@ -20,7 +20,7 @@ const json = core.getBooleanInput('json', { required: false });
 const includeRR = core.getBooleanInput('include-rr', { required: false });
 const omitRaw = core.getBooleanInput('omit-raw', { required: false });
 
-const githubRepot = core.getBooleanInput('github-report', { required: false });
+const githubReport = core.getBooleanInput('github-report', { required: false });
 const githubToken = core.getInput('github-token', { required: false });
 
 const nucleiVersion = core.getInput('nuclei-version', { required: false });
@@ -75,7 +75,7 @@ async function run() {
     if (flags) params.push(...parseFlagsToArray(flags));
 
     // If everything is fine and github-report is set, generate the yaml config file.
-    if (githubRepot) {
+    if (githubReport) {
       await generateGithubReportFile(githubToken);
       params.push(`-rc=github-report.yaml`);
     }
