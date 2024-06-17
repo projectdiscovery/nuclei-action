@@ -113,6 +113,8 @@ jobs:
           report-config: issues.yaml
 ```
 
+
+
 **GitHub Example Action running Nuclei with GitHub Issue reporting**
 
 Setting permissions for `GITHUB_TOKEN`, according to the [github actions docs](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token).
@@ -129,6 +131,42 @@ permissions:
           github-report: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+Using the `github-report` creates a default configuration to enable reporting to Github Issues
+
+
+**GitHub Example Action running Nuclei with custom GitHub Issue reporting**
+
+```yaml
+      - name: Nuclei - Vulnerability Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+          target: https://example.com
+          report-config: github-issue-config.yaml
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Create a `yaml` fine to define the nuclei github issue reporting behavior:
+
+```yaml
+github:
+  duplicate-issue-check: true
+  severity-as-label: true
+  issue-label: '<Nuclei Scan Vulnerability>'
+```
+
+The `nuclie-action` will fill in the repository settings into the custom configuration. The file don't need to be augmented with these information manually.
+
+```yaml
+github:
+  username: GITHUB_ACTOR,
+  owner: GITHUB_REPOSITORY_OWNER,
+  token,
+  "project-name": GITHUB_REPOSITORY,
+```
+
+
+
 
 **GitHub Example Action running Nuclei with GitHub Security Dashboard reporting**
 

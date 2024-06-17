@@ -39,9 +39,9 @@ options.listeners = {
 };
 
 async function run() {
-	try {
-		// download and install
-		const binPath = await installer.downloadAndInstall(nucleiVersion);
+  try {
+    // download and install
+    const binPath = await installer.downloadAndInstall(nucleiVersion);
     const params = [];
 
     if (!target && !urls) {
@@ -57,17 +57,16 @@ async function run() {
         new URL(templates)
         params.push(`-turl=${templates}`);
       }
-      catch(_) {
+      catch (_) {
         params.push(`-t=${templates}`);
       }
     }
     if (workflows) params.push(`-w=${workflows}`);
     params.push(`-se=${sarifExport ? sarifExport : 'nuclei.sarif'}`);
     if (markdownExport) params.push(`-me=${markdownExport}`);
-    if (reportConfig) params.push(`-rc=${reportConfig}`);
     if (config) params.push(`-config=${config}`);
     if (userAgent) params.push(`-H=${userAgent}`);
-    params.push(`-o=${ output ? output : 'nuclei.log' }`);
+    params.push(`-o=${output ? output : 'nuclei.log'}`);
     if (json) params.push('-json');
     if (includeRR) params.push('-irr');
     if (omitRaw) params.push('-or');
@@ -75,17 +74,21 @@ async function run() {
     if (flags) params.push(...parseFlagsToArray(flags));
 
     // If everything is fine and github-report is set, generate the yaml config file.
-    if (githubReport) {
+    if (githubReport == true) {
+      // create default config file with name `github-report.yaml`
       await generateGithubReportFile(githubToken);
       params.push(`-rc=github-report.yaml`);
+    } else if (reportConfig != null) {
+      await generateGithubReportFile(githubToken, reportConfig);
+      params.push(`-rc=${reportConfig}`);
     }
 
-		// run tool
+    // run tool
     delete process.env.GITHUB_TOKEN
     exec.exec(binPath, params, options);
-	} catch (error) {
-		core.setFailed(error.message);
-	}
+  } catch (error) {
+    core.setFailed(error.message);
+  }
 }
 
 run();
