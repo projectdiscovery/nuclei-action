@@ -146,7 +146,7 @@ Using the `github-report` creates a default configuration to enable reporting to
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Create a `yaml` fine to define the nuclei github issue reporting behavior:
+Create a `yaml` file to define the nuclei github issue reporting behavior:
 
 ```yaml
 github:
