@@ -10788,6 +10788,7 @@ function parseFlagsToArray(rawFlags) {
 
 
 
+const fs = __nccwpck_require__(7147);
 
 const target = core.getInput('target', { required: false });
 const urls = core.getInput('urls', { required: false });
@@ -10847,7 +10848,8 @@ async function run() {
       }
     }
     if (workflows) params.push(`-w=${workflows}`);
-    params.push(`-se=${sarifExport ? sarifExport : 'nuclei.sarif'}`);
+    const sarifFileName = sarifExport ? sarifExport : 'nuclei.sarif';
+    params.push(`-se=${sarifFileName}`);
     if (markdownExport) params.push(`-me=${markdownExport}`);
     if (config) params.push(`-config=${config}`);
     if (userAgent) params.push(`-H=${userAgent}`);
@@ -10870,7 +10872,12 @@ async function run() {
 
     // run tool
     delete process.env.GITHUB_TOKEN
-    exec.exec(binPath, params, options);
+    await exec.exec(binPath, params, options);
+    if (fs.existsSync(sarifFileName)) {
+      core.setOutput('sarif_exists', 'true');
+    } else {
+      core.setOutput('sarif_exists', 'false');
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
