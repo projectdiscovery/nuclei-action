@@ -3,6 +3,7 @@ import * as exec from '@actions/exec';
 import * as installer from './installer';
 import { generateGithubReportFile } from './yaml';
 import { parseFlagsToArray } from './utils';
+const fs = require('fs');
 
 const target = core.getInput('target', { required: false });
 const urls = core.getInput('urls', { required: false });
@@ -62,7 +63,8 @@ async function run() {
       }
     }
     if (workflows) params.push(`-w=${workflows}`);
-    params.push(`-se=${sarifExport ? sarifExport : 'nuclei.sarif'}`);
+    const sarifFileName = sarifExport ? sarifExport : 'nuclei.sarif';
+    params.push(`-se=${sarifFileName}`);
     if (markdownExport) params.push(`-me=${markdownExport}`);
     if (config) params.push(`-config=${config}`);
     if (userAgent) params.push(`-H=${userAgent}`);
