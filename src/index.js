@@ -85,7 +85,12 @@ async function run() {
 
     // run tool
     delete process.env.GITHUB_TOKEN
-    exec.exec(binPath, params, options);
+    await exec.exec(binPath, params, options);
+    if (fs.existsSync(sarifFileName)) {
+      core.setOutput('sarif_exists', 'true');
+    } else {
+      core.setOutput('sarif_exists', 'false');
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
