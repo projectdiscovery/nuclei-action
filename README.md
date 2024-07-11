@@ -26,6 +26,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Nuclei - Vulnerability Scan
+        id: nuclei_scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
@@ -38,8 +39,11 @@ jobs:
 
       - name: GitHub Security Dashboard Alerts update
         uses: github/codeql-action/upload-sarif@v3
+        if: steps.nuclei_scan.outputs.sarif_exists == 'true'
         with:
           sarif_file: nuclei.sarif
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 **GitHub Action running Nuclei on single URL**
@@ -172,14 +176,18 @@ github:
 
 ```yaml
       - name: Nuclei - Vulnerability Scan
+        id: nuclei_scan
         uses: projectdiscovery/nuclei-action@main
         with:
           target: https://example.com
 
-      - name: GitHub Security Dashboard Alerts
+      - name: GitHub Security Dashboard Alerts update
         uses: github/codeql-action/upload-sarif@v3
+        if: steps.nuclei_scan.outputs.sarif_exists == 'true'
         with:
           sarif_file: nuclei.sarif
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 Available Inputs
