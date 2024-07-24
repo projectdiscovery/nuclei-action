@@ -4,15 +4,19 @@ import * as path from 'path';
 
 const GITHUB_ACTOR = process.env.GITHUB_ACTOR;
 const GITHUB_REPOSITORY_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
-const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY.replace(`${GITHUB_REPOSITORY_OWNER}/`, '');
+const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
 const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
 
 export async function generateGithubReportFile(token, reportConfigFileName = 'github-report.yaml') {
+    if (!GITHUB_REPOSITORY || !GITHUB_REPOSITORY_OWNER) {
+        throw new Error('GITHUB_REPOSITORY or GITHUB_REPOSITORY_OWNER is not set.');
+    }
+    const projectName = GITHUB_REPOSITORY.replace(`${GITHUB_REPOSITORY_OWNER}/`, '');
     const gitHubRepoConfig = {
         username: GITHUB_ACTOR,
         owner: GITHUB_REPOSITORY_OWNER,
         token,
-        "project-name": GITHUB_REPOSITORY,
+        "project-name": projectName,
     };
 
     let content = {};
