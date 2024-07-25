@@ -6846,6 +6846,10 @@ async function getLatestInfo() {
 async function downloadAndInstall(selectedVersion) {
 	const toolName = "nuclei";
 	const latest = await getLatestInfo();
+
+	if (!latest || !latest.tag_name) {
+		throw new Error("Latest version information is not available.");
+	}
 	
 	const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
 
@@ -10744,15 +10748,19 @@ var external_path_ = __nccwpck_require__(1017);
 
 const GITHUB_ACTOR = process.env.GITHUB_ACTOR;
 const GITHUB_REPOSITORY_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
-const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY.replace(`${GITHUB_REPOSITORY_OWNER}/`, '');
+const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
 const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
 
 async function generateGithubReportFile(token, reportConfigFileName = 'github-report.yaml') {
+    if (!GITHUB_REPOSITORY || !GITHUB_REPOSITORY_OWNER) {
+        throw new Error('GITHUB_REPOSITORY or GITHUB_REPOSITORY_OWNER is not set.');
+    }
+    const projectName = GITHUB_REPOSITORY.replace(`${GITHUB_REPOSITORY_OWNER}/`, '');
     const gitHubRepoConfig = {
         username: GITHUB_ACTOR,
         owner: GITHUB_REPOSITORY_OWNER,
         token,
-        "project-name": GITHUB_REPOSITORY,
+        "project-name": projectName,
     };
 
     let content = {};
@@ -10780,8 +10788,13 @@ async function generateGithubReportFile(token, reportConfigFileName = 'github-re
 ;// CONCATENATED MODULE: ./src/utils.js
 function parseFlagsToArray(rawFlags) {
     const re = /(?:(?:^|\s)-[-a-z]+)(?:(?:\s|=)(?:[^-](?:[0-9a-z-\S])*))?/g;
-    return rawFlags.match(re).map(token => token.trim()).map(token => token.replace(' ', '='));
+    const matches = rawFlags.match(re);
+    if (!matches) {
+        return [];
+    }
+    return matches.map(token => token.trim()).map(token => token.replace(' ', '='));
 }
+
 ;// CONCATENATED MODULE: ./src/index.js
 
 

@@ -37,6 +37,10 @@ async function getLatestInfo() {
 export async function downloadAndInstall(selectedVersion) {
 	const toolName = "nuclei";
 	const latest = await getLatestInfo();
+
+	if (!latest || !latest.tag_name) {
+		throw new Error("Latest version information is not available.");
+	}
 	
 	const version = selectedVersion ? selectedVersion : latest.tag_name.replace(/v/g, '');
 
