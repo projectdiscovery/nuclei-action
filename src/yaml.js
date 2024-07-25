@@ -7,7 +7,9 @@ const GITHUB_REPOSITORY_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
 const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
 
-export async function generateGithubReportFile(token, reportConfigFileName = 'github-report.yaml') {
+export const DEFAULT_GITHUB_REPORT_CONFIG = 'default-github-report.yaml';
+
+export async function generateGithubReportFile(token, reportConfigFileName = DEFAULT_GITHUB_REPORT_CONFIG) {
     if (!GITHUB_REPOSITORY || !GITHUB_REPOSITORY_OWNER) {
         throw new Error('GITHUB_REPOSITORY or GITHUB_REPOSITORY_OWNER is not set.');
     }
@@ -19,9 +21,10 @@ export async function generateGithubReportFile(token, reportConfigFileName = 'gi
         "project-name": projectName,
     };
 
+    const isDefaultConfig = reportConfigFileName === DEFAULT_GITHUB_REPORT_CONFIG;
     let content = {};
 
-    if (reportConfigFileName) {
+    if (!isDefaultConfig) {
         try {
             const data = await fs.promises.readFile(path.join(GITHUB_WORKSPACE, reportConfigFileName), 'utf8');
             const { github, ...rest } = yaml.load(data);

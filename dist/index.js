@@ -10751,7 +10751,9 @@ const GITHUB_REPOSITORY_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
 const GITHUB_WORKSPACE = process.env.GITHUB_WORKSPACE;
 
-async function generateGithubReportFile(token, reportConfigFileName = 'github-report.yaml') {
+const DEFAULT_GITHUB_REPORT_CONFIG = 'default-github-report.yaml';
+
+async function generateGithubReportFile(token, reportConfigFileName = DEFAULT_GITHUB_REPORT_CONFIG) {
     if (!GITHUB_REPOSITORY || !GITHUB_REPOSITORY_OWNER) {
         throw new Error('GITHUB_REPOSITORY or GITHUB_REPOSITORY_OWNER is not set.');
     }
@@ -10763,9 +10765,10 @@ async function generateGithubReportFile(token, reportConfigFileName = 'github-re
         "project-name": projectName,
     };
 
+    const isDefaultConfig = reportConfigFileName === DEFAULT_GITHUB_REPORT_CONFIG;
     let content = {};
 
-    if (reportConfigFileName) {
+    if (!isDefaultConfig) {
         try {
             const data = await external_fs_.promises.readFile(external_path_.join(GITHUB_WORKSPACE, reportConfigFileName), 'utf8');
             const { github, ...rest } = load(data);
@@ -10873,12 +10876,12 @@ async function run() {
 
     if (flags) params.push(...parseFlagsToArray(flags));
 
-    // If everything is fine and github-report is set, generate the yaml config file.
-    if (githubReport == true) {
+     // If everything is fine and github-report is set, generate the yaml config file.
+     if (githubReport) {
       // create default config file with name `github-report.yaml`
       await generateGithubReportFile(githubToken);
-      params.push(`-rc=github-report.yaml`);
-    } else if (reportConfig != null) {
+      params.push(`-rc=${DEFAULT_GITHUB_REPORT_CONFIG}`);
+    } else if (reportConfig  && reportConfig.trim().length > 0) {
       await generateGithubReportFile(githubToken, reportConfig);
       params.push(`-rc=${reportConfig}`);
     }

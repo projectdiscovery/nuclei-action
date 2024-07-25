@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as installer from './installer';
-import { generateGithubReportFile } from './yaml';
+import { generateGithubReportFile, DEFAULT_GITHUB_REPORT_CONFIG } from './yaml';
 import { parseFlagsToArray } from './utils';
 const fs = require('fs');
 
@@ -75,12 +75,12 @@ async function run() {
 
     if (flags) params.push(...parseFlagsToArray(flags));
 
-    // If everything is fine and github-report is set, generate the yaml config file.
-    if (githubReport == true) {
+     // If everything is fine and github-report is set, generate the yaml config file.
+     if (githubReport) {
       // create default config file with name `github-report.yaml`
       await generateGithubReportFile(githubToken);
-      params.push(`-rc=github-report.yaml`);
-    } else if (reportConfig != null) {
+      params.push(`-rc=${DEFAULT_GITHUB_REPORT_CONFIG}`);
+    } else if (reportConfig  && reportConfig.trim().length > 0) {
       await generateGithubReportFile(githubToken, reportConfig);
       params.push(`-rc=${reportConfig}`);
     }
