@@ -66,6 +66,14 @@ inputs:
     description: "Export nuclei results in SARIF format"
     required: false
 
+  json-export:
+    description: "Export nuclei results in JSON format"
+    required: false
+
+  jsonl-export:
+    description: "Export nuclei results in JSONL format"
+    required: false
+
   markdown-export:
     description: "Export nuclei results in Markdown format"
     required: false

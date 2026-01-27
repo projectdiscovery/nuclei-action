@@ -10,6 +10,8 @@ const urls = core.getInput('urls', { required: false });
 const templates = core.getInput('templates', { required: false });
 const workflows = core.getInput('workflows', { required: false });
 const sarifExport = core.getInput('sarif-export', { required: false });
+const jsonExport = core.getInput('json-export', { required: false });
+const jsonlExport = core.getInput('jsonl-export', { required: false });
 const markdownExport = core.getInput('markdown-export', { required: false });
 const reportConfig = core.getInput('report-config', { required: false });
 const config = core.getInput('config', { required: false });
@@ -65,6 +67,10 @@ async function run() {
     if (workflows) params.push(`-w=${workflows}`);
     const sarifFileName = sarifExport ? sarifExport : 'nuclei.sarif';
     params.push(`-se=${sarifFileName}`);
+    const jsonFileName = jsonExport ? jsonExport : 'nuclei.json';
+    params.push(`-je=${jsonFileName}`);
+    const jsonlFileName = jsonlExport ? jsonlExport : 'nuclei.jsonl';
+    params.push(`-jle=${jsonlFileName}`);
     if (markdownExport) params.push(`-me=${markdownExport}`);
     if (config) params.push(`-config=${config}`);
     if (userAgent) params.push(`-H=${userAgent}`);
@@ -92,6 +98,16 @@ async function run() {
       core.setOutput('sarif_exists', 'true');
     } else {
       core.setOutput('sarif_exists', 'false');
+    }
+    if (fs.existsSync(jsonFileName)) {
+      core.setOutput('json_exists', 'true');
+    } else {
+      core.setOutput('json_exists', 'false');
+    }
+    if (fs.existsSync(jsonlFileName)) {
+      core.setOutput('jsonl_exists', 'true');
+    } else {
+      core.setOutput('jsonl_exists', 'false');
     }
   } catch (error) {
     core.setFailed(error.message);

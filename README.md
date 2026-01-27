@@ -209,6 +209,8 @@ Available Inputs
 | `github-report`   | Set `true` to generate Github issue with the report              | false    |
 | `github-token`    | Set the Github Token                                             | false    |
 | `sarif-export`    | File to export result (default - nuclei.sarif)                   | false    |
+| `json-export`     | File to export result (default - nuclei.json)                    | false    |
+| `jsonl-export`    | File to export result (default - nuclei.jsonl)                   | false    |
 | `markdown-export` | Directory to export markdown results                             | false    |
 | `flags`           | More Nuclei CLI flags to use                                     | false    |
 | `nuclei-version`  | Use this specific nucleai version, by default latest is used     | false    |
