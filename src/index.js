@@ -114,4 +114,6 @@ async function run() {
   }
 }
 
+core.warning("nuclei-action v2 are deprecated and (main) will be unsupported (replaced by v3) on 1 March 2026. Please update workflows to use projectdiscovery/nuclei-action@v3.")
+
 run();

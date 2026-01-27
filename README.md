@@ -6,6 +6,11 @@
 This Nuclei Action makes it easy to orchestrate [Nuclei](https://github.com/projectdiscovery/nuclei) with [GitHub Action](https://github.com/features/actions).
 Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuclei-templates) into powerful continuous security workflows and make it part of your secure software development life cycle.
 
+> [!WARNING]
+> #### Deprecation Notice
+> The `v2*` references are deprecated and (`main`) will be unsupported (replaced by `v3`) on **1 March 2026**.
+> Please update workflows to use [`projectdiscovery/nuclei-action@v3`](https://github.com/projectdiscovery/nuclei-action/tree/v3).
+
 Example Usage
 -----
 
