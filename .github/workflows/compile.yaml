@@ -1,0 +1,35 @@
+name: Compile
+
+on:
+  push:
+    branches:
+      - main
+      - v3
+    paths:
+      - 'src/**'
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: projectdiscovery/actions/setup/git@v1
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - run: bun run compile
+      - run: |
+          git add dist/
+          git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
+          [ $? -eq 0 ] && echo "CHANGES=true" >> $GITHUB_ENV
+      - if: env.CHANGES == 'true'
+        run: git push origin $GITHUB_REF
+
+  tests:
+    needs: [compile]
+    uses: ./.github/workflows/tests.yaml

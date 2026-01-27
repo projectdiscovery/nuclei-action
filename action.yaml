@@ -1,0 +1,40 @@
+name: "Nuclei Action"
+description: "A fast, open-source, and highly customizable vulnerability scanner."
+branding:
+  icon: "activity"
+  color: "blue"
+
+inputs:
+  version:
+    description: 'Setup with specific version ("latest" or in format "vX.Y.Z")'
+    required: true
+    default: "latest"
+  install-only:
+    description: "Install Nuclei without running scans"
+    required: false
+    default: "false"
+  args:
+    description: "Arguments to pass to Nuclei"
+    required: false
+  config:
+    description: "Nuclei configuration file content"
+    required: false
+  config-path:
+    description: "Path to Nuclei configuration file"
+    required: false
+  token:
+    description: "GitHub Token"
+    required: true
+    default: "${{ github.token }}"
+
+outputs:
+  stdout:
+    description: "The standard output from running Nuclei"
+  stderr:
+    description: "The standard error from running Nuclei"
+
+runs:
+  using: "node24"
+  pre: "dist/pre.js"
+  main: "dist/index.js"
+  post: "dist/post.js"

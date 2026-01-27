@@ -1,0 +1,66 @@
+name: Tests
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+  workflow_call: {}
+  workflow_dispatch: {}
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: "Inline config"
+        uses: ./
+        with:
+          config: |
+            target:
+              - http://scanme.sh
+            disable-update-check: true
+            no-mhe: true
+            no-httpx: true
+            code: true
+            dast: true
+            file: true
+            headless: true
+            enable-self-contained: true
+            enable-global-matchers: true
+            rate-limit: 0
+            bulk-size: 250
+            concurrency: 250
+            headless-bulk-size: 100
+            headless-concurrency: 100
+            payload-concurrency: 250
+            probe-concurrency: 500
+      - name: "Inline config with args"
+        uses: ./
+        with:
+          args: -target http://scanme.sh
+          config: |
+            disable-update-check: true
+            no-mhe: true
+            no-httpx: true
+            code: true
+            dast: true
+            file: true
+            headless: true
+            enable-self-contained: true
+            enable-global-matchers: true
+            rate-limit: 0
+            bulk-size: 250
+            concurrency: 250
+            headless-bulk-size: 100
+            headless-concurrency: 100
+            payload-concurrency: 250
+            probe-concurrency: 500
+      - name: "Repo-managed config with args"
+        uses: ./
+        id: test
+        with:
+          args: -target http://scanme.sh
+          config-path: testdata/config.yaml
+      - run: |
+          echo "stdout: ${{ steps.test.outputs.stdout }}"
+          echo "stderr: ${{ steps.test.outputs.stderr }}"

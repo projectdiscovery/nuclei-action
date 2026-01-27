@@ -1,0 +1,16 @@
+disable-update-check: true
+no-mhe: true
+no-httpx: true
+code: true
+dast: true
+file: true
+headless: true
+enable-self-contained: true
+enable-global-matchers: true
+rate-limit: 0
+bulk-size: 250
+concurrency: 250
+headless-bulk-size: 100
+headless-concurrency: 100
+payload-concurrency: 250
+probe-concurrency: 500

@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      deps:
+        patterns: ["*"]
+        exclude-patterns: ["projectdiscovery/actions/*"]
+    labels:
+      - "Type: Maintenance"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      workflows:
+        patterns: ["*"]
+        exclude-patterns: ["projectdiscovery/actions/*"]
+    labels:
+      - "Type: Maintenance"
