@@ -62,5 +62,8 @@ jobs:
           args: -target http://scanme.sh
           config-path: testdata/config.yaml
       - run: |
-          echo "stdout: ${{ steps.test.outputs.stdout }}"
-          echo "stderr: ${{ steps.test.outputs.stderr }}"
+          printf 'stdout:\n%s\n' "$STDOUT"
+          printf 'stderr:\n%s\n' "$STDERR"
+        env:
+          STDOUT: ${{ steps.test.outputs.stdout }}
+          STDERR: ${{ steps.test.outputs.stderr }}
