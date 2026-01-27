@@ -198,6 +198,10 @@ github:
 Refer to https://github.com/projectdiscovery/nuclei/blob/dev/cmd/nuclei/issue-tracker-config.yaml.
 </details>
 
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](.github/CONTRIBUTING.md) for details on how to get started.
+
 ## License
 
-MIT. See [LICENSE](/LICENSE).
+MIT. See [LICENSE](/LICENSE) for more details.
