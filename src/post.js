@@ -1,10 +1,17 @@
 const cache = require('@actions/cache')
+const core = require('@actions/core')
 const fs = require('node:fs')
 const os = require('node:os')
 const path = require('node:path')
 const utils = require('./utils')
+const shouldCache = core.getBooleanInput('cache', { required: false })
 
 const main = async () => {
+  if (!shouldCache) {
+    core.info("Caching disabled; skipping save step.")
+    return
+  }
+
   const homeDir = os.homedir()
   const platform = utils.getPlatform()
 

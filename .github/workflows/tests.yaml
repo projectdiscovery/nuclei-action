@@ -12,6 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: "Install only"
+        uses: ./
+        with:
+          install-only: true
+          cache: false
+      - run: nuclei -update-templates
       - name: "Inline config"
         uses: ./
         with:
