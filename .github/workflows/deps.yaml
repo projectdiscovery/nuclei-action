@@ -1,0 +1,25 @@
+name: Dependencies
+
+on:
+  pull_request:
+    paths:
+      - 'package.json'
+
+jobs:
+  deps:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+      - run: bun install
+      - run: bun run compile
+      - run: |
+          git add bun.lock dist/
+          git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
+          git push origin $GITHUB_REF || true
+
+  tests:
+    needs: [deps]
+    uses: ./.github/workflows/tests.yaml
