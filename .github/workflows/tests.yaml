@@ -9,65 +9,79 @@ on:
 
 jobs:
   tests:
+    name: "Tests - ${{ matrix.name }}"
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: install-only
+            install-only: true
+            cache: false
+          - name: inline-config
+            config: |
+              target:
+                - http://scanme.sh
+              disable-update-check: true
+              no-mhe: true
+              no-httpx: true
+              code: true
+              dast: true
+              file: true
+              headless: true
+              enable-self-contained: true
+              enable-global-matchers: true
+              rate-limit: 0
+              bulk-size: 250
+              concurrency: 250
+              headless-bulk-size: 100
+              headless-concurrency: 100
+              payload-concurrency: 250
+              probe-concurrency: 500
+          - name: inline-config-with-args
+            args: -target http://scanme.sh
+            config: |
+              disable-update-check: true
+              no-mhe: true
+              no-httpx: true
+              code: true
+              dast: true
+              file: true
+              headless: true
+              enable-self-contained: true
+              enable-global-matchers: true
+              rate-limit: 0
+              bulk-size: 250
+              concurrency: 250
+              headless-bulk-size: 100
+              headless-concurrency: 100
+              payload-concurrency: 250
+              probe-concurrency: 500
+          - name: repo-managed-config-with-args
+            args: -target http://scanme.sh
+            config-path: testdata/config.yaml
     steps:
       - uses: actions/checkout@v6
       - name: "Install only"
+        if: matrix.install-only == true
         uses: ./
         with:
           install-only: true
-          cache: false
-      - run: nuclei -update-templates
-      - name: "Inline config"
-        uses: ./
-        with:
-          config: |
-            target:
-              - http://scanme.sh
-            disable-update-check: true
-            no-mhe: true
-            no-httpx: true
-            code: true
-            dast: true
-            file: true
-            headless: true
-            enable-self-contained: true
-            enable-global-matchers: true
-            rate-limit: 0
-            bulk-size: 250
-            concurrency: 250
-            headless-bulk-size: 100
-            headless-concurrency: 100
-            payload-concurrency: 250
-            probe-concurrency: 500
-      - name: "Inline config with args"
-        uses: ./
-        with:
-          args: -target http://scanme.sh
-          config: |
-            disable-update-check: true
-            no-mhe: true
-            no-httpx: true
-            code: true
-            dast: true
-            file: true
-            headless: true
-            enable-self-contained: true
-            enable-global-matchers: true
-            rate-limit: 0
-            bulk-size: 250
-            concurrency: 250
-            headless-bulk-size: 100
-            headless-concurrency: 100
-            payload-concurrency: 250
-            probe-concurrency: 500
-      - name: "Repo-managed config with args"
-        uses: ./
+          cache: ${{ matrix.cache }}
+      - name: "Update templates"
+        if: matrix.install-only == true
+        run: nuclei -update-templates
+      - name: "Run action"
+        if: matrix.install-only != true
         id: test
+        uses: ./
         with:
-          args: -target http://scanme.sh
-          config-path: testdata/config.yaml
-      - run: |
+          args: ${{ matrix.args }}
+          config: ${{ matrix.config }}
+          config-path: ${{ matrix.config-path }}
+      - name: "Print outputs"
+        if: matrix.config-path
+        run: |
           printf 'stdout:\n%s\n' "$STDOUT"
           printf 'stderr:\n%s\n' "$STDERR"
         env:
