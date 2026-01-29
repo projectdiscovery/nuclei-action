@@ -1,4 +1,3 @@
-disable-update-check: true
 no-mhe: true
 no-httpx: true
 code: true

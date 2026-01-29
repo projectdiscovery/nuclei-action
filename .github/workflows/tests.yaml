@@ -22,7 +22,6 @@ jobs:
             config: |
               target:
                 - http://scanme.sh
-              disable-update-check: true
               no-mhe: true
               no-httpx: true
               code: true
@@ -41,7 +40,6 @@ jobs:
           - name: inline-config-with-args
             args: -target http://scanme.sh
             config: |
-              disable-update-check: true
               no-mhe: true
               no-httpx: true
               code: true
@@ -80,7 +78,6 @@ jobs:
           config: ${{ matrix.config }}
           config-path: ${{ matrix.config-path }}
       - name: "Print outputs"
-        if: matrix.config-path
         run: |
           printf 'stdout:\n%s\n' "$STDOUT"
           printf 'stderr:\n%s\n' "$STDERR"
