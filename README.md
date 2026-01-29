@@ -176,13 +176,13 @@ or via repo-managed config file:
 ```yaml
 github:
  # base-url is the optional self-hosted GitHub application url
- base-url: https://localhost:8443/github
+ base-url: $GITHUB_BASE_URL # read from environment variable
  # username is the username of the GitHub user
- username: test-username
+ username: $GITHUB_USERNAME # read from environment variable
  # owner is the owner name of the repository for issues
- owner: test-owner
+ owner: $GITHUB_REPOSITORY # read from environment variable
  # token is the token for GitHub account
- token: test-token
+ token: $GITHUB_TOKEN # read from environment variable
  # project-name is the name of the repository
  project-name: test-project
  # issue-label is the label of the created issue type
