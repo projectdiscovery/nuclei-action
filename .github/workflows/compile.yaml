@@ -26,9 +26,7 @@ jobs:
       - run: |
           git add dist/
           git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
-          [ $? -eq 0 ] && echo "CHANGES=true" >> $GITHUB_ENV
-      - if: env.CHANGES == 'true'
-        run: git push origin $GITHUB_REF
+          git push origin $GITHUB_REF || true
 
   tests:
     needs: [compile]
