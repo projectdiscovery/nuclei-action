@@ -187,6 +187,12 @@ or via repo-managed config file:
     args: -u http://scanme.sh
     config: |
       report-config: issue-tracker-config.yaml
+  env:
+    GITHUB_BASE_URL: https://localhost:8443/github
+    GITHUB_USERNAME: test-username
+    GITHUB_OWNER: test-owner
+    GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
+    GITHUB_PROJECT_NAME: test-project
 ```
 
 <details>
@@ -199,11 +205,12 @@ github:
  # username is the username of the GitHub user
  username: $GITHUB_USERNAME # read from environment variable
  # owner is the owner name of the repository for issues
- owner: $GITHUB_REPOSITORY # read from environment variable
+ owner: $GITHUB_OWNER # read from environment variable
  # token is the token for GitHub account
  token: $GITHUB_TOKEN # read from environment variable
  # project-name is the name of the repository
- project-name: test-project
+ project-name: $GITHUB_PROJECT_NAME # read from environment variable
+
  # issue-label is the label of the created issue type
  issue-label: bug
  # allow-list sets a tracker level filter to only create issues for templates with
