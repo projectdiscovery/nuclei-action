@@ -23,3 +23,12 @@ jobs:
   tests:
     needs: [deps]
     uses: ./.github/workflows/tests.yaml
+
+  merge:
+    needs: [deps, tests]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: projectdiscovery/actions/pr/approve@v1
+      - uses: projectdiscovery/actions/pr/merge@v1
