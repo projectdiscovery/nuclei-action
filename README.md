@@ -44,7 +44,7 @@ This action is a `node24` action.
 ## Usage
 
 ```yaml
-- uses: ***PROJECT***@***VERSION***
+- uses: projectdiscovery/nuclei-action@v3
   with:
     version:
     # Setup with specific version ("latest" or in format "vX.Y.Z").
