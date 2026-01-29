@@ -1,49 +1,49 @@
-const dl = require('./download')
-const exec = require('./exec')
-const validate = require('./validate')
-const core = require('@actions/core')
-const installOnly = core.getBooleanInput('install-only', { required: false })
+import dl from './download'
+import exec from './exec'
+import validate from './validate'
+import { getBooleanInput, startGroup, setFailed, endGroup, info } from '@actions/core'
+const installOnly = getBooleanInput('install-only', { required: false })
 
 const main = async () => {
   if (!installOnly) {
-    core.startGroup("Validating inputs")
+    startGroup("Validating inputs")
     try {
       validate()
     } catch (error) {
-      core.setFailed(error.message)
-      core.endGroup()
+      setFailed(error.message)
+      endGroup()
       process.exit(1)
     }
-    core.endGroup()
+    endGroup()
   }
 
-  core.startGroup("Downloading Nuclei")
+  startGroup("Downloading Nuclei")
   try {
     await dl()
   } catch (error) {
-    core.setFailed(error.message)
-    core.endGroup()
+    setFailed(error.message)
+    endGroup()
     process.exit(1)
   }
-  core.endGroup()
+  endGroup()
 
   if (installOnly) {
-    core.info("Installation only; skipping execution step.")
+    info("Installation only; skipping execution step.")
     return
   }
 
-  core.startGroup("Executing Nuclei")
+  startGroup("Executing Nuclei")
   try {
     await exec()
   } catch (error) {
-    core.setFailed(error.message)
-    core.endGroup()
+    setFailed(error.message)
+    endGroup()
     process.exit(1)
   }
-  core.endGroup()
+  endGroup()
 }
 
 main().catch((error) => {
-  core.setFailed(error.message)
+  setFailed(error.message)
   process.exit(1)
 })

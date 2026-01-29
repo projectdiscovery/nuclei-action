@@ -1,44 +1,44 @@
-const cache = require('@actions/cache')
-const core = require('@actions/core')
-const fs = require('node:fs')
-const os = require('node:os')
-const path = require('node:path')
-const utils = require('./utils')
-const shouldCache = core.getBooleanInput('cache', { required: false })
+import { restoreCache } from '@actions/cache'
+import { getBooleanInput, info } from '@actions/core'
+import { existsSync, readFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+import { getPlatform } from './utils'
+const shouldCache = getBooleanInput('cache', { required: false })
 
 const main = async () => {
   if (!shouldCache) {
-    core.info("Caching disabled; skipping restore step.")
+    info("Caching disabled; skipping restore step.")
     return
   }
 
-  const homeDir = os.homedir()
-  const platform = utils.getPlatform()
+  const homeDir = homedir()
+  const platform = getPlatform()
 
   // Restore nuclei cache
 
   const basePaths = [
-    path.join(homeDir, '.config', 'nuclei'),
-    path.join(homeDir, '.cache', 'nuclei')
+    join(homeDir, '.config', 'nuclei'),
+    join(homeDir, '.cache', 'nuclei')
   ]
 
   try {
-    await cache.restoreCache(basePaths, `nuclei-action-${platform.os}-${platform.arch}`)
+    await restoreCache(basePaths, `nuclei-action-${platform.os}-${platform.arch}`)
   } catch (error) {
     // Ignore cache restore failures
   }
 
   // Restore nuclei-templates cache
 
-  const templatesConfigPath = path.join(homeDir, '.config', 'nuclei', '.templates-config.json')
-  if (fs.existsSync(templatesConfigPath)) {
+  const templatesConfigPath = join(homeDir, '.config', 'nuclei', '.templates-config.json')
+  if (existsSync(templatesConfigPath)) {
     try {
-      const rawConfig = fs.readFileSync(templatesConfigPath, { encoding: 'utf8' })
+      const rawConfig = readFileSync(templatesConfigPath, { encoding: 'utf8' })
       const templatesConfig = JSON.parse(rawConfig)
       const templatesDir = templatesConfig['nuclei-templates-directory']
 
       if (templatesDir) {
-        await cache.restoreCache([templatesDir], `nuclei-templates-${platform.os}-${platform.arch}`)
+        await restoreCache([templatesDir], `nuclei-templates-${platform.os}-${platform.arch}`)
       }
     } catch (error) {
       // Ignore invalid config and skip restoring templates
@@ -47,9 +47,9 @@ const main = async () => {
 
   // Restore rod browser cache
 
-  const rodBrowserPath = path.join(homeDir, '.cache', 'rod', 'browser')
+  const rodBrowserPath = join(homeDir, '.cache', 'rod', 'browser')
   try {
-    await cache.restoreCache([rodBrowserPath], `rod-browser-${platform.os}-${platform.arch}`)
+    await restoreCache([rodBrowserPath], `rod-browser-${platform.os}-${platform.arch}`)
   } catch (error) {
     // Ignore cache restore failures
   }

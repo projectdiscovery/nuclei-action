@@ -1,9 +1,9 @@
-const core = require('@actions/core')
-const version = core.getInput('version', { required: true })
-const config = core.getInput('config', { required: false })
-const configPath = core.getInput('config-path', { required: false })
+import { getInput } from '@actions/core'
+const version = getInput('version', { required: true })
+const config = getInput('config', { required: false })
+const configPath = getInput('config-path', { required: false })
 
-module.exports = () => {
+export default () => {
   if (version !== 'latest' && !version.match(/^v\d+\.\d+\.\d+$/)) {
     throw new Error('Version must be "latest" or in format "vX.Y.Z"')
   }
