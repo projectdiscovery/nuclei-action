@@ -1,33 +1,25 @@
-name: Compile
+name: Dependencies
 
 on:
-  push:
-    branches:
-      - main
-      - v3
+  pull_request:
     paths:
-      - 'src/**'
+      - 'package.json'
 
 jobs:
-  compile:
+  deps:
+    if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - uses: projectdiscovery/actions/setup/git@v1
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-      - run: bun install --frozen-lockfile
+      - run: bun install
       - run: bun run compile
       - run: |
-          git add dist/
+          git add bun.lock dist/
           git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
           git push origin $GITHUB_REF || true
 
   tests:
-    needs: [compile]
+    needs: [deps]
     uses: ./.github/workflows/tests.yaml
