@@ -15,19 +15,20 @@ Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuc
 
 | name | description | required | default |
 | --- | --- | --- | --- |
-| `version` | <p>Setup with specific version ("latest" or in format "vX.Y.Z")</p> | `true` | `latest` |
-| `install-only` | <p>Install Nuclei without running scans</p> | `false` | `false` |
-| `args` | <p>Arguments to pass to Nuclei</p> | `false` | `""` |
-| `config` | <p>Nuclei configuration file content</p> | `false` | `""` |
-| `config-path` | <p>Path to Nuclei configuration file</p> | `false` | `""` |
-| `token` | <p>GitHub Token</p> | `true` | `${{ github.token }}` |
+| `version` | <p>Setup with specific version ("latest" or in format "vX.Y.Z").</p> | `true` | `latest` |
+| `install-only` | <p>Install Nuclei without running scans.</p> | `false` | `false` |
+| `args` | <p>Arguments to pass to Nuclei.</p> | `false` | `""` |
+| `config` | <p>Nuclei configuration file content.</p> | `false` | `""` |
+| `config-path` | <p>Path to Nuclei configuration file.</p> | `false` | `""` |
+| `cache` | <p>Enable caching of Nuclei caches, configs, templates, and browser.</p> | `false` | `true` |
+| `token` | <p>GitHub Token. It is used to fetch Nuclei releases from GitHub.</p> | `true` | `${{ github.token }}` |
 
 > [!IMPORTANT]
 > * `config` and `config-path` **must not** be set together.
 > * `args` **always take precedence** over `config` or `config-path`.
 
 > [!NOTE]
-> When [debug logging](https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging) is enabled, this action automatically adds `-debug` and `-verbose` arguments to Nuclei.
+> When [debug logging](https://docs.github.com/en/actions/how-tos/monitor-workflows/enable-debug-logging) is enabled, this action automatically adds `-debug` and `-verbose` flags to Nuclei.
 
 ## Outputs
 
@@ -43,40 +44,46 @@ This action is a `node24` action.
 ## Usage
 
 ```yaml
-- uses: projectdiscovery/nuclei-action@v3
+- uses: ***PROJECT***@***VERSION***
   with:
     version:
-    # Setup with specific version ("latest" or in format "vX.Y.Z")
+    # Setup with specific version ("latest" or in format "vX.Y.Z").
     #
     # Required: true
     # Default: latest
 
     install-only:
-    # Install Nuclei without running scans
+    # Install Nuclei without running scans.
     #
     # Required: false
     # Default: false
 
     args:
-    # Arguments to pass to Nuclei
+    # Arguments to pass to Nuclei.
     #
     # Required: false
     # Default: ""
 
     config:
-    # Nuclei configuration file content
+    # Nuclei configuration file content.
     #
     # Required: false
     # Default: ""
 
     config-path:
-    # Path to Nuclei configuration file
+    # Path to Nuclei configuration file.
     #
     # Required: false
     # Default: ""
 
+    cache:
+    # Enable caching of Nuclei caches, configs, templates, and browser.
+    #
+    # Required: false
+    # Default: true
+
     token:
-    # GitHub Token
+    # GitHub Token. It is used to fetch Nuclei releases from GitHub.
     #
     # Required: true
     # Default: ${{ github.token }}
@@ -108,6 +115,18 @@ This action is a `node24` action.
   with:
     version: v3.6.0
     install-only: true
+
+- run: nuclei -version
+```
+
+or install only and without cache:
+
+```yaml
+- uses: projectdiscovery/nuclei-action@v3
+  with:
+    version: v3.6.0
+    install-only: true
+    cache: false
 
 - run: nuclei -version
 ```

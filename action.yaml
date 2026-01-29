@@ -6,32 +6,36 @@ branding:
 
 inputs:
   version:
-    description: 'Setup with specific version ("latest" or in format "vX.Y.Z")'
+    description: 'Setup with specific version ("latest" or in format "vX.Y.Z").'
     required: true
     default: "latest"
   install-only:
-    description: "Install Nuclei without running scans"
+    description: "Install Nuclei without running scans."
     required: false
     default: "false"
   args:
-    description: "Arguments to pass to Nuclei"
+    description: "Arguments to pass to Nuclei."
     required: false
   config:
-    description: "Nuclei configuration file content"
+    description: "Nuclei configuration file content."
     required: false
   config-path:
-    description: "Path to Nuclei configuration file"
+    description: "Path to Nuclei configuration file."
     required: false
+  cache:
+    description: "Enable caching of Nuclei caches, configs, templates, and browser."
+    required: false
+    default: "true"
   token:
-    description: "GitHub Token"
+    description: "GitHub Token. It is used to fetch Nuclei releases from GitHub."
     required: true
     default: "${{ github.token }}"
 
 outputs:
   stdout:
-    description: "The standard output from running Nuclei"
+    description: "The standard output from running Nuclei."
   stderr:
-    description: "The standard error from running Nuclei"
+    description: "The standard error from running Nuclei."
 
 runs:
   using: "node24"
