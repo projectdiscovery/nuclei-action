@@ -3,10 +3,10 @@
     "compile": "bun build src/index.js src/pre.js src/post.js --minify --outdir=dist --target=node --format=cjs --sourcemap=external"
   },
   "dependencies": {
-    "@actions/cache": "^5.0.3",
+    "@actions/cache": "^6.0.0",
     "@actions/core": "^3.0.0",
     "@actions/github": "^9.0.0",
-    "@actions/tool-cache": "^3.0.0",
+    "@actions/tool-cache": "^4.0.0",
     "string-argv": "^0.3.2"
   }
 }
