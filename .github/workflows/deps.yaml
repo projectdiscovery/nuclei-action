@@ -5,14 +5,18 @@ on:
     paths:
       - 'package.json'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   deps:
     if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
       - uses: projectdiscovery/actions/setup/git@v1
       - uses: oven-sh/setup-bun@v2
         with:
@@ -22,7 +26,7 @@ jobs:
       - run: |
           git add bun.lock dist/
           git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
-          git push origin $GITHUB_REF || true
+          git push origin HEAD:$GITHUB_HEAD_REF || true
 
   tests:
     needs: [deps]
@@ -31,8 +35,6 @@ jobs:
   merge:
     needs: [deps, tests]
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - uses: projectdiscovery/actions/pr/approve@v1
       - uses: projectdiscovery/actions/pr/merge@v1
