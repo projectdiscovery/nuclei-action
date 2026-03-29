@@ -24,7 +24,7 @@ jobs:
       - run: bun install
       - run: bun run compile
       - run: |
-          git add bun.lock dist/
+          git add bun.lock dist/ cache/dist/
           git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
           git push origin HEAD:$GITHUB_HEAD_REF || true
 

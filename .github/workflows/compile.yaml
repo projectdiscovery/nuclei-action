@@ -24,7 +24,7 @@ jobs:
       - run: bun install --frozen-lockfile
       - run: bun run compile
       - run: |
-          git add dist/
+          git add dist/ cache/dist/
           git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
           git push origin $GITHUB_REF || true
 
