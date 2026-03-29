@@ -6,10 +6,13 @@
 This Nuclei Action makes it easy to orchestrate [Nuclei](https://github.com/projectdiscovery/nuclei) with [GitHub Action](https://github.com/features/actions).
 Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuclei-templates) into powerful continuous security workflows and make it part of your secure software development life cycle.
 
-> [!WARNING]
-> #### Deprecation Notice
-> The `v2*` references are deprecated and (`main`) will be unsupported (replaced by `v3`) on **1 March 2026**.
-> Please update workflows to use `projectdiscovery/nuclei-action@v3`.
+<img alt="Nuclei Action" src="https://github.com/user-attachments/assets/2eeaaeb8-23d4-40cf-a986-4b9825157922" />
+
+## Compatibility
+
+- `v3.0.0+` runs on Node.js v24 and adopts a CLI-first interface, accepting [inputs](#inputs) like `version`, `install-only`, `args`, etc., and [outputs](#outputs) only to `stdout` and `stderr`.
+- `v2.0.0+` and `v2.x` relies on action-specific inputs such as `target`, `urls`, `templates`, `workflows`, `flags`, and various exporter/reporting toggles; `v2.x` are deprecated and unsupported after **March 1, 2026**. See [MIGRATION.md](MIGRATION.md) before upgrading.
+- `v1+` runs on Node.js v16 and uses inputs like `target`, `urls`, `templates`, `workflows`, `output`, `json`, `include-rr`, `config`, `report-config`, `github-report`, `github-token`, `sarif-export`, `markdown-export`, and `flags`.
 
 ## Inputs
 
