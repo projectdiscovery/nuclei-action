@@ -1,0 +1,11 @@
+name: "Nuclei Cache Action"
+description: "Restore and save Nuclei caches, configs, templates, and browser data."
+branding:
+  icon: "archive"
+  color: "blue"
+
+runs:
+  using: "node24"
+  pre: "dist/pre.js"
+  main: "dist/index.js"
+  post: "dist/post.js"
