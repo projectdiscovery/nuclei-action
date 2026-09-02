@@ -220,7 +220,7 @@ Define the full issue tracker configuration in your repository, then reference a
 - run: nuclei -version
 ```
 
-`cache` controls whether the main action restores and saves Nuclei cache data. It defaults to `true`.
+`cache` controls whether the main action restores and saves Nuclei template state, regenerable cache data, templates, and Rod browser data. It does not cache Nuclei configuration files. It defaults to `true`.
 
 ## Final check before switching to v3
 

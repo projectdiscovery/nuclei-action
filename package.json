@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "compile": "bun build src/index.js src/pre.js src/post.js --minify --outdir=dist --target=node --format=cjs --sourcemap=external && bun build src/cache/index.js src/cache/pre.js src/cache/post.js --minify --outdir=cache/dist --target=node --format=cjs --sourcemap=external"
+    "compile": "bun build src/index.js src/pre.js src/post.js --minify --outdir=dist --target=node --format=cjs --sourcemap=external && bun build src/cache/index.js src/cache/pre.js src/cache/post.js --minify --outdir=cache/dist --target=node --format=cjs --sourcemap=external",
+    "test": "bun test"
   },
   "dependencies": {
     "@actions/cache": "^6.0.0",

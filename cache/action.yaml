@@ -1,5 +1,5 @@
 name: "Nuclei Cache Action"
-description: "Restore and save Nuclei caches, configs, templates, and browser data."
+description: "Restore and save Nuclei template state, cache data, templates, and browser data."
 branding:
   icon: "archive"
   color: "blue"
