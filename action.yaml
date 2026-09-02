@@ -23,7 +23,7 @@ inputs:
     description: "Path to Nuclei configuration file."
     required: false
   cache:
-    description: "Enable caching of Nuclei caches, configs, templates, and browser."
+    description: "Enable caching of Nuclei template state, cache data, templates, and browser data."
     required: false
     default: "true"
   token:

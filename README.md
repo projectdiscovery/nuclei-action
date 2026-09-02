@@ -23,7 +23,7 @@ Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuc
 | `args` | <p>Arguments to pass to Nuclei.</p> | `false` | `""` |
 | `config` | <p>Nuclei configuration file content.</p> | `false` | `""` |
 | `config-path` | <p>Path to Nuclei configuration file.</p> | `false` | `""` |
-| `cache` | <p>Enable caching of Nuclei caches, configs, templates, and browser.</p> | `false` | `true` |
+| `cache` | <p>Enable caching of Nuclei template state, cache data, templates, and browser data.</p> | `false` | `true` |
 | `token` | <p>GitHub Token. It is used to fetch Nuclei releases from GitHub.</p> | `true` | `${{ github.token }}` |
 
 > [!IMPORTANT]
@@ -43,6 +43,13 @@ Integrate all of your [Nuclei Templates](https://github.com/projectdiscovery/nuc
 ## Runs
 
 This action is a `node24` action.
+
+## Caching
+
+Caching includes Nuclei template state, regenerable cache data, templates, and Rod browser data. It does not include the user configuration directory (`XDG_CONFIG_HOME/nuclei` or `NUCLEI_CONFIG_DIR`), `XDG_CONFIG_DIRS`, or `/etc/nuclei/config.yaml` on Unix.
+
+> [!WARNING]
+> Do not store credentials, private keys, or other sensitive information in a cached path. For the exact cache scope and compatibility details, see the [cache sub-action documentation](cache/README.md).
 
 ## Usage
 
@@ -80,7 +87,7 @@ This action is a `node24` action.
     # Default: ""
 
     cache:
-    # Enable caching of Nuclei caches, configs, templates, and browser.
+    # Enable caching of Nuclei template state, cache data, templates, and browser data.
     #
     # Required: false
     # Default: true

@@ -1,31 +1,142 @@
 import { restoreCache, saveCache } from '@actions/cache'
 import { existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs'
 import { homedir } from 'node:os'
-import { join } from 'node:path'
+import { join, posix, win32 } from 'node:path'
 import { getPlatform } from '../utils'
 
-function getBasePaths(homeDir) {
-  return [
-    join(homeDir, '.config', 'nuclei'),
-    join(homeDir, '.cache', 'nuclei')
-  ]
-}
+function getNucleiPaths(homeDir, env = process.env, platform = process.platform) {
+  const paths = platform === 'win32' ? win32 : posix
 
-function getTemplatesDir(homeDir) {
-  const templatesConfigPath = join(homeDir, '.config', 'nuclei', '.templates-config.json')
+  let dataHome
+  let stateHome
+  let cacheHome
+  let dataDirs
 
-  if (!existsSync(templatesConfigPath)) {
-    return null
+  if (platform === 'darwin') {
+    const applicationSupport = paths.join(homeDir, 'Library', 'Application Support')
+    dataHome = applicationSupport
+    stateHome = applicationSupport
+    cacheHome = paths.join(homeDir, 'Library', 'Caches')
+    dataDirs = ['/Library/Application Support', paths.join(homeDir, '.local', 'share')]
+  } else if (platform === 'win32') {
+    const localAppData = env.LOCALAPPDATA || paths.join(homeDir, 'AppData', 'Local')
+    dataHome = localAppData
+    stateHome = localAppData
+    cacheHome = paths.join(localAppData, 'cache')
+    dataDirs = [
+      env.APPDATA || paths.join(homeDir, 'AppData', 'Roaming'),
+      env.ProgramData || 'C:\\ProgramData'
+    ]
+  } else {
+    dataHome = paths.join(homeDir, '.local', 'share')
+    stateHome = paths.join(homeDir, '.local', 'state')
+    cacheHome = paths.join(homeDir, '.cache')
+    dataDirs = ['/usr/local/share', '/usr/share']
   }
 
-  try {
-    const rawConfig = readFileSync(templatesConfigPath, { encoding: 'utf8' })
-    const templatesConfig = JSON.parse(rawConfig)
+  dataHome = getXDGPath(env.XDG_DATA_HOME, dataHome, homeDir, paths, platform)
+  stateHome = getXDGPath(env.XDG_STATE_HOME, stateHome, homeDir, paths, platform)
+  cacheHome = getXDGPath(env.XDG_CACHE_HOME, cacheHome, homeDir, paths, platform)
+  dataDirs = getXDGPathList(env.XDG_DATA_DIRS, dataDirs, homeDir, paths, platform)
 
-    return templatesConfig['nuclei-templates-directory'] || null
+  return {
+    paths,
+    stateDir: paths.join(stateHome, 'nuclei'),
+    cacheDir: paths.join(cacheHome, 'nuclei'),
+    dataHome,
+    dataDirs
+  }
+}
+
+function getXDGPath(value, fallback, homeDir, paths, platform) {
+  const expanded = expandHome(value, homeDir, paths, platform)
+  return expanded && paths.isAbsolute(expanded) ? expanded : fallback
+}
+
+function getXDGPathList(value, fallback, homeDir, paths, platform) {
+  const configured = (value || '')
+    .split(paths.delimiter)
+    .map((path) => expandHome(path, homeDir, paths, platform))
+    .filter((path) => paths.isAbsolute(path))
+
+  return configured.length > 0 ? [...new Set(configured)] : fallback
+}
+
+function expandHome(value, homeDir, paths, platform) {
+  if (!value) {
+    return value
+  }
+
+  if (platform === 'win32' && value.startsWith('%USERPROFILE%')) {
+    return paths.join(homeDir, value.slice('%USERPROFILE%'.length))
+  }
+  if (platform !== 'win32' && value.startsWith('~')) {
+    return paths.join(homeDir, value.slice(1))
+  }
+  if (platform !== 'win32' && value.startsWith('$HOME')) {
+    return paths.join(homeDir, value.slice('$HOME'.length))
+  }
+
+  return value
+}
+
+export function getBasePaths(homeDir, env = process.env, platform = process.platform) {
+  const { paths, stateDir, cacheDir } = getNucleiPaths(homeDir, env, platform)
+  return [paths.join(stateDir, 'templates.json'), cacheDir]
+}
+
+function readTemplatesDir(statePath) {
+  try {
+    const rawState = readFileSync(statePath, { encoding: 'utf8' })
+    const state = JSON.parse(rawState)
+
+    const templatesDir = state['nuclei-templates-directory']
+    return typeof templatesDir === 'string' && templatesDir ? templatesDir : null
   } catch (error) {
     return null
   }
+}
+
+export function getTemplatesDir(homeDir, env = process.env, platform = process.platform) {
+  const { paths, stateDir, dataHome, dataDirs } = getNucleiPaths(homeDir, env, platform)
+  if (env.NUCLEI_TEMPLATES_DIR) {
+    return env.NUCLEI_TEMPLATES_DIR
+  }
+
+  const statePath = paths.join(stateDir, 'templates.json')
+  if (existsSync(statePath)) {
+    return readTemplatesDir(statePath)
+  }
+
+  const userRoot = paths.join(dataHome, 'nuclei', 'nuclei-templates')
+  const templateRoots = [
+    userRoot,
+    ...dataDirs.map((dir) => paths.join(dir, 'nuclei', 'nuclei-templates'))
+  ]
+  for (const root of templateRoots) {
+    try {
+      if (existsSync(root)) {
+        return statSync(root).isDirectory() ? root : null
+      }
+    } catch (error) {
+      return null
+    }
+  }
+
+  return userRoot
+}
+
+export function getTemplatesDirForSave(homeDir, env = process.env, platform = process.platform) {
+  const { paths, stateDir } = getNucleiPaths(homeDir, env, platform)
+  const statePath = paths.join(stateDir, 'templates.json')
+  if (existsSync(statePath)) {
+    const templatesDir = readTemplatesDir(statePath)
+    if (templatesDir) {
+      return templatesDir
+    }
+  }
+
+  return getTemplatesDir(homeDir, env, platform)
 }
 
 async function restoreBaseCache(homeDir, cacheKeyPrefix) {
@@ -71,7 +182,7 @@ async function saveBaseCache(homeDir, cacheKeyPrefix) {
 }
 
 async function saveTemplatesCache(homeDir, cacheKeyPrefix) {
-  const templatesDir = getTemplatesDir(homeDir)
+  const templatesDir = getTemplatesDirForSave(homeDir)
 
   if (!templatesDir || !existsSync(templatesDir)) {
     return
