@@ -1,24 +1,28 @@
 name: Dependencies
 
+# Compiles Dependabot npm updates into dist/ and pushes the result to the PR
+# branch. A maintainer reviews and merges the PR: the compiled code runs in
+# every workflow that uses this action.
+
 on:
   pull_request:
     paths:
       - 'package.json'
 
-permissions:
-  contents: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   deps:
-    if: github.actor == 'dependabot[bot]'
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.head_ref }}
       - uses: projectdiscovery/actions/setup/git@v1
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: latest
       - run: bun install
@@ -26,15 +30,10 @@ jobs:
       - run: |
           git add bun.lock dist/ cache/dist/
           git diff --quiet && git diff --staged --quiet || git commit -m "build: compile latest changes"
-          git push origin HEAD:$GITHUB_HEAD_REF || true
+          git push origin "HEAD:$GITHUB_HEAD_REF" || true
 
   tests:
     needs: [deps]
+    permissions:
+      contents: read
     uses: ./.github/workflows/tests.yaml
-
-  merge:
-    needs: [deps, tests]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: projectdiscovery/actions/pr/approve@v1
-      - uses: projectdiscovery/actions/pr/merge@v1

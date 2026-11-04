@@ -4,6 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Wait before a new release is proposed, so that a bad release can be
+    # found and pulled from the registry first.
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: "chore"
       include: "scope"
